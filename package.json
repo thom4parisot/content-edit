@@ -1,0 +1,19 @@
+{
+  "name": "jquery-content-edit",
+  "title": "Content Edit",
+  "description": "HTML Content Edit (jQuery) plugin. To edit content with a more complex workflow than just an inline editable.",
+  "author": "Thomas Parisot",
+  "homepage": "https://github.com/oncletom/content-edit",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "bower": "~0.9.2"
+  },
+  "scripts": {
+    "test": "grunt test --verbose",
+    "postinstall": "bower install"
+  }
+}
