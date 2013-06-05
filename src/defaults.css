@@ -1,0 +1,11 @@
+/* Hiding only templates, not the editable content linking to the template */
+[data-editable-template]:not([data-editable]){
+  display: none;
+}
+
+[data-editable-template].editing{
+  display: block;
+}
+[data-editable].editing{
+  opacity: 0.8;
+}

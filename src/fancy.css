@@ -1,0 +1,6 @@
+[data-editable]:hover:after{
+  content: "\270E";
+  cursor: pointer;
+  padding-left: .2em;
+  position: absolute;
+}

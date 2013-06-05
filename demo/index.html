@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Content Edit Example</title>
+  <link rel="stylesheet" href="../src/defaults.css"/>
+  <link rel="stylesheet" href="../src/fancy.css"/>
+</head>
+<body>
+
+<h1>Content Edit Demo</h1>
+
+<p data-editable="text" id="editable-paragraph">This paragraph is editable.</p>
+
+<p>This paragraph is not editable.</p>
+
+<p>In this long paragraph, <a href="#" data-editable="text" data-editable-template="hyperlink">only this hyperlink is editable</a>.</p>
+
+<p><small>
+  <strong>Did you know it?</strong>
+  You can also <a href="#editable-paragraph" data-editable>click to edit the first paragraph</a>.
+</small></p>
+
+<!-- Default Editable Template -->
+<form action="#" data-editable-template>
+  <h2>Edit this content</h2>
+
+  <textarea name="content" cols="30" rows="10" required></textarea>
+
+  <div class="original-content"></div>
+
+  <div class="form-actions">
+    <input class="btn btn-main" type="submit" value="Save" />
+    <input class="btn" type="button" value="Cancel" />
+  </div>
+</form>
+
+
+<!-- Alternate Hyperlink Template -->
+<form action="#" data-editable-template="hyperlink">
+  <h2>Edit this hyperlink</h2>
+  <input type="text" name="content" required />
+
+  <div class="original-content"></div>
+
+  <div class="form-actions">
+    <input class="btn btn-main" type="submit" value="Save" />
+    <input class="btn" type="button" value="Cancel" />
+  </div>
+</form>
+
+
+<script src="../src/vendor/jquery/jquery.min.js"></script>
+<script src="../dist/jquery.content-edit.js"></script>
+</body>
+</html>
