@@ -45,14 +45,21 @@ module.exports = function(grunt) {
 			options: {
 				banner: "<%= meta.banner %>"
 			}
-		}
+		},
+
+    watch: {
+      scripts: {
+        files: "src/*.js",
+        tasks: ['concat']
+      }
+    }
 
 	});
 
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
-	grunt.loadNpmTasks("grunt-contrib-coffee");
+	grunt.loadNpmTasks("grunt-contrib-watch");
 
 	grunt.registerTask("default", ["concat", "jshint", "uglify"]);
 	grunt.registerTask("test", ["jshint"]);
