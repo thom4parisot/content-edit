@@ -149,11 +149,11 @@ $.fn.editable.Constructor = ContentEditPlugin;
 
 //
 (function contentEditBootstrap($document){
-  function initElement(event) {
+  function editElement(event) {
     /* jshint validthis:true */
     event.preventDefault();
 
-    $(this).editable();
+    $(this).editable('edit');
   }
 
   function cancelEdit() {
@@ -161,7 +161,7 @@ $.fn.editable.Constructor = ContentEditPlugin;
     $(this).parents("form[data-editable-template]").data("content-edit-source").cancel();
   }
 
-  $document.on("click", "[data-editable]", initElement);
+  $document.on("click", "[data-editable]", editElement);
   $document.on("click", "[data-editable-template] [data-toggle='cancel']", cancelEdit);
 })($(document));
 
