@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 		// Concat definitions
 		concat: {
 			dist: {
-				src: ["src/content.js", "src/plugin.js"],
+				src: ["src/plugin.js"],
 				dest: "dist/jquery.content-edit.js"
 			},
 			options: {
