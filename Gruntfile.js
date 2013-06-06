@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 				dest: "dist/jquery.content-edit.js"
 			},
 			options: {
-				banner: '"use strict"; (function($){',
+				banner: '(function($){ "use strict";',
 				footer: "})(jQuery,document,window);"
 			}
 		},
