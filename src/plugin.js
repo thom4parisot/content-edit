@@ -41,10 +41,10 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
 ContentEditPlugin.prototype.displayForm = function displayForm () {
   $(this.templateElement)
     .find("[data-editable-content]")
-      .val(this.sourceElement.innerHTML)
+      .val(this.contentElement.innerHTML)
       .end()
     .find(".original-content")
-      .text(this.sourceElement.innerHTML)
+      .text(this.contentElement.innerHTML)
       .end()
     .show();
 };
@@ -93,7 +93,7 @@ ContentEditPlugin.prototype.templateElementLookup = function templateElementLook
  * @param {String} newState
  * @private
  */
-ContentEditPlugin.prototype._transitionTo = function _transitionTo (newState) {
+ContentEditPlugin.prototype.setState = function setState (newState) {
   if (newState === this.state || !~ContentEditPlugin.states.indexOf(newState)){
     return false;
   }
@@ -101,7 +101,7 @@ ContentEditPlugin.prototype._transitionTo = function _transitionTo (newState) {
   this.previousState = this.state;
   this.state = newState;
 
-  $([this.sourceElement, this.contentElement])
+  $(this.contentElement)
     .trigger("state", [this])
     .trigger("state." + this.state, [this])
     .removeClass("editable-"+this.previousState)
@@ -112,14 +112,14 @@ ContentEditPlugin.prototype._transitionTo = function _transitionTo (newState) {
  *
  */
 ContentEditPlugin.prototype.edit = function edit() {
-  this._transitionTo("in-edit");
+  this.setState("in-edit");
 };
 
 /**
  *
  */
 ContentEditPlugin.prototype.cancel = function cancel () {
-  this._transitionTo("idle");
+  this.setState("idle");
 };
 
 /**
