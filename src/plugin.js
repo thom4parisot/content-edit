@@ -1,4 +1,7 @@
 /**
+ * Content Edit Plugin Constructor
+ *
+ * Link and initialize elements together.
  *
  * @param {HTMLElement} element
  * @param {Object=} options
@@ -6,19 +9,48 @@
  */
 function ContentEditPlugin(element, options) {
   this.options = $.extend({}, ContentEditPlugin.defaults, options);
+
+  /**
+   * Active state of the content edit.
+   * It is used for a naive state machine approach and transition
+   * @type {string}
+   */
   this.state = "idle";
+
+  /**
+   * Previous state of the content edit.
+   * Mainly used to detect if we're asked to transition in a new state.
+   * @type {string}
+   */
   this.previousState = this.state;
 
+  /**
+   * DOM Element from which the edit has been requested (not necessarily the one we edit).
+   * @type {HTMLElement}
+   */
   this.sourceElement = element;
+
+  /**
+   * DOM Element we want to edit.
+   * @type {HTMLElement|null}
+   */
   this.contentElement = null;
+
+  /**
+   * DOM Element used to let the user edit the content.
+   * @type {HTMLElement|null}
+   */
   this.templateElement = null;
 
+  //init process. It populates the previous attributes.
   this.init();
   this.initEvents();
 }
 
 /**
+ * Initialize elements and resolve their dependencies between each other.
  *
+ * @api
  */
 ContentEditPlugin.prototype.init = function init () {
   this.contentElementLookup(this.sourceElement);
@@ -28,17 +60,25 @@ ContentEditPlugin.prototype.init = function init () {
 };
 
 /**
+ * Initialize events by… hooking events on the contentElement.
+ * We act this way to let the build process totally modular and expandable at no cost.
  *
+ * @api
  */
 ContentEditPlugin.prototype.initEvents = function initEvents () {
   var $contentElement = $(this.contentElement);
 
-  $contentElement.on("state.in-edit", $.proxy(this.displayForm, this));
-  $contentElement.on("state.idle", $.proxy(this.resetForm, this));
-  $contentElement.on("state.idle", $.proxy(this.hideForm, this));
+  $contentElement.on("state.in-edit", $.proxy(this.startEdit, this));
+  $contentElement.on("state.idle", $.proxy(this.endEdit, this));
 };
 
-ContentEditPlugin.prototype.displayForm = function displayForm () {
+/**
+ * Displays the form element and let the user edit the content.
+ * Usually used when transitioning to 'in-edit' state.
+ *
+ * @api
+ */
+ContentEditPlugin.prototype.startEdit = function startEdit () {
   $(this.templateElement)
     .find("[data-editable-content]")
       .val(this.contentElement.innerHTML)
@@ -49,8 +89,15 @@ ContentEditPlugin.prototype.displayForm = function displayForm () {
     .show();
 };
 
-ContentEditPlugin.prototype.resetForm = function resetForm () {
+/**
+ * Hides the form and resets everything back.
+ * Usually used when transitioning back to 'idle' state.
+ *
+ * @api
+ */
+ContentEditPlugin.prototype.endEdit = function endEdit () {
   $(this.templateElement)
+    .hide()
     .find("[data-editable-content]")
       .val("")
       .end()
@@ -58,14 +105,12 @@ ContentEditPlugin.prototype.resetForm = function resetForm () {
       .text("");
 };
 
-ContentEditPlugin.prototype.hideForm = function hideForm () {
-  $(this.templateElement).hide();
-};
-
 /**
+ * Resolve the `contentElement`.
+ * This can be either the clicked element or a link-targeted one.
  *
- * @param sourceElement
- * @returns {*}
+ * @param {HTMLElement} sourceElement
+ * @returns {HTMLElement}
  */
 ContentEditPlugin.prototype.contentElementLookup = function contentElementLookup (sourceElement) {
   var targetSelector = (sourceElement.getAttribute("href") || sourceElement.getAttribute("data-editable-target") || "").trim();
@@ -76,9 +121,11 @@ ContentEditPlugin.prototype.contentElementLookup = function contentElementLookup
 };
 
 /**
+ * Resolve the `templateElement`.
+ * The edit process will happen in the
  *
- * @param contentElement
- * @returns {*}
+ * @param {HTMLElement} contentElement
+ * @returns {HTMLElement}
  */
 ContentEditPlugin.prototype.templateElementLookup = function templateElementLookup (contentElement) {
   var templateSelector = contentElement.getAttribute("data-editable-template") || "";
@@ -89,9 +136,9 @@ ContentEditPlugin.prototype.templateElementLookup = function templateElementLook
 };
 
 /**
+ * Transition the edit process in a new state.
  *
  * @param {String} newState
- * @private
  */
 ContentEditPlugin.prototype.setState = function setState (newState) {
   if (newState === this.state || !~ContentEditPlugin.states.indexOf(newState)){
@@ -109,28 +156,28 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
 };
 
 /**
+ * Default plugin options.
+ * Override them to alter *all the future new instances* of content edition.
  *
- */
-ContentEditPlugin.prototype.edit = function edit() {
-  this.setState("in-edit");
-};
-
-/**
- *
- */
-ContentEditPlugin.prototype.cancel = function cancel () {
-  this.setState("idle");
-};
-
-/**
- *
- * @type {{}}
+ * @type {Object}
  */
 ContentEditPlugin.defaults = {
 };
 
-ContentEditPlugin.states = ["idle", "in-edit", "in-save"];
+/**
+ * Supported states of the content edition.
+ * If you may add items in there, removing one of these may harm a little penguin.
+ *
+ * @type {Array}
+ */
+ContentEditPlugin.states = ["idle", "editing", "saving"];
 
+/**
+ * Public jQuery Plugin Declaration.
+ *
+ * @param {Object|String=} options
+ * @returns {jQuery}
+ */
 $.fn.editable = function (options) {
   return this.each(function () {
     if (!$.data(this, "plugin_editable")) {
@@ -138,7 +185,7 @@ $.fn.editable = function (options) {
     }
 
     if (typeof options === "string" || options === undefined) {
-      $.data(this, "plugin_editable")[options || "edit"]();
+      $.data(this, "plugin_editable").setState(options || "editing");
     }
   });
 };
@@ -153,12 +200,12 @@ $.fn.editable.Constructor = ContentEditPlugin;
     /* jshint validthis:true */
     event.preventDefault();
 
-    $(this).editable('edit');
+    $(this).editable();
   }
 
   function cancelEdit() {
     /* jshint validthis:true */
-    $(this).parents("form[data-editable-template]").data("content-edit-source").cancel();
+    $(this).parents("form[data-editable-template]").data("content-edit-source").setState('idle');
   }
 
   $document.on("click", "[data-editable]", editElement);
