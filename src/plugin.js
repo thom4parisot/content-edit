@@ -85,14 +85,17 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
  * @api
  */
 ContentEditPlugin.prototype.startEdit = function startEdit () {
+  this.setContent(this.contentElement.innerHTML);
+
   $(this.templateElement)
-    .find("[data-editable-content]")
-      .val(this.contentElement.innerHTML)
-      .end()
     .find(".original-content")
       .text(this.contentElement.innerHTML)
       .end()
     .show();
+};
+
+ContentEditPlugin.prototype.setContent = function setContent(value){
+  $(this.templateElement).find("[data-editable-content]").val(value);
 };
 
 /**
@@ -104,11 +107,10 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
 ContentEditPlugin.prototype.endEdit = function endEdit () {
   $(this.templateElement)
     .hide()
-    .find("[data-editable-content]")
-      .val("")
-      .end()
     .find(".original-content")
       .text("");
+
+  this.setContent("");
 };
 
 /**
