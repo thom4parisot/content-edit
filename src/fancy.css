@@ -1,4 +1,5 @@
-[data-editable]:hover:after{
+[data-editable]:hover:after,
+[data-editable].editable-editing:after{
   content: "\270E";
   cursor: pointer;
   padding-left: .2em;

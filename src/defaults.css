@@ -3,9 +3,9 @@
   display: none;
 }
 
-[data-editable-template].editing{
+[data-editable-template]:not([data-editable]).editable-editing{
   display: block;
 }
-[data-editable].editing{
+[data-editable].editable-editing{
   opacity: 0.8;
 }

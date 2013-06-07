@@ -68,13 +68,13 @@ ContentEditPlugin.prototype.init = function init () {
 ContentEditPlugin.prototype.initEvents = function initEvents () {
   var $contentElement = $(this.contentElement);
 
-  $contentElement.on("state.in-edit", $.proxy(this.startEdit, this));
+  $contentElement.on("state.editing", $.proxy(this.startEdit, this));
   $contentElement.on("state.idle", $.proxy(this.endEdit, this));
 };
 
 /**
  * Displays the form element and let the user edit the content.
- * Usually used when transitioning to 'in-edit' state.
+ * Usually used when transitioning to 'editing' state.
  *
  * @api
  */
@@ -145,12 +145,14 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
     return false;
   }
 
+  var $contentElement = $(this.contentElement);
+
   this.previousState = this.state;
   this.state = newState;
 
-  $(this.contentElement)
-    .trigger("state", [this])
-    .trigger("state." + this.state, [this])
+  $contentElement.trigger("state", [this]).trigger("state." + this.state, [this]);
+
+  $contentElement.add(this.templateElement)
     .removeClass("editable-"+this.previousState)
     .addClass("editable-"+this.state);
 };
@@ -191,10 +193,14 @@ $.fn.editable = function (options) {
 };
 
 
-// Exposing the Plugin API
+/*
+  Exposing the Plugin API
+ */
 $.fn.editable.Constructor = ContentEditPlugin;
 
-//
+/*
+  Hooking event delegation.
+ */
 (function contentEditBootstrap($document){
   function editElement(event) {
     /* jshint validthis:true */
