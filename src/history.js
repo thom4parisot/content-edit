@@ -8,6 +8,8 @@ function ContentEditHistoryPlugin(editable){
 
 ContentEditHistoryPlugin.prototype.init = function init(editable){
   this.historyElement = $(editable.templateElement).siblings("[data-editable-extension='history']").get(0);
+
+  $(this.historyElement).data("content-edit-source", editable);
 };
 
 ContentEditHistoryPlugin.prototype.idle = function idle(){
@@ -20,18 +22,35 @@ ContentEditHistoryPlugin.prototype.editing = function editing(){
     .removeClass("hidden");
 };
 
+ContentEditHistoryPlugin.prototype.revertRevision = function revertRevision(revisionElement){
+  this.copyRevision(revisionElement);
 
-(function($document){
+  this.editable.setState("saving");
+};
 
-  function spyOn(event, editable){
-    var history = editable.plugins.history;
+ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisionElement){
+  this.editable.setContent( $(revisionElement).find("[data-editable-history-revision]").html().trim() );
+};
 
-    if (!history){
-      history = editable.plugins.history = new ContentEditHistoryPlugin(editable);
-    }
+ContentEditHistoryPlugin.bootstrap = function bootstrapContentEditHistoryPlugin(event, editable){
+  var history = editable.plugins.history;
 
-    history.historyElement && history[editable.state] && history[editable.state](event);
+  if (!history){
+    history = editable.plugins.history = new ContentEditHistoryPlugin(editable);
   }
 
-  $document.on("state.*", "[data-editable]", spyOn);
+  history.historyElement && history[editable.state] && history[editable.state](event);
+};
+
+ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(){
+  var editable = $(this).parents("[data-editable-extension='history']").data("content-edit-source");
+  var history = editable.plugins.history;
+  var revisionAction = this.getAttribute("data-editable-history-action") + "Revision";
+
+  history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".data-editable-history-item").get(0) );
+};
+
+(function($document){
+  $document.on("state.*", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
+  $document.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
 })($(document));
