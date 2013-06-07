@@ -211,7 +211,7 @@ $.fn.editable.Constructor = ContentEditPlugin;
 
   function cancelEdit() {
     /* jshint validthis:true */
-    $(this).parents("form[data-editable-template]").data("content-edit-source").setState('idle');
+    $(this).parents("form[data-editable-template]").data("content-edit-source").setState("idle");
   }
 
   $document.on("click", "[data-editable]", editElement);
