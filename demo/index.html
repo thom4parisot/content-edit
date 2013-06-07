@@ -4,6 +4,7 @@
   <title>Content Edit Example</title>
   <link rel="stylesheet" href="../src/defaults.css"/>
   <link rel="stylesheet" href="../src/fancy.css"/>
+  <link rel="stylesheet" href="layout.css"/>
 </head>
 <body>
 
@@ -36,17 +37,26 @@
 
 
 <!-- Alternate Hyperlink Template -->
-<form action="#" data-editable-template="hyperlink">
-  <h2>Edit this hyperlink</h2>
-  <input type="text" name="content" data-editable-content required />
+<div class="container">
+  <form action="#" data-editable-template="hyperlink">
+    <h2>Edit this hyperlink</h2>
+    <input type="text" name="content" data-editable-content required />
 
-  <div class="original-content"></div>
+    <div class="original-content"></div>
 
-  <div class="form-actions">
-    <input class="btn btn-main" type="submit" value="Save" />
-    <input class="btn" type="button" value="Cancel" data-toggle="cancel" />
+    <div class="form-actions">
+      <input class="btn btn-main" type="submit" value="Save" />
+      <input class="btn" type="button" value="Cancel" data-toggle="cancel" />
+    </div>
+  </form>
+
+  <!-- Revision History Module -->
+  <div class="content-history hidden">
+    <h2>Revisions History</h2>
+
+    <ul class="content-history-list"></ul>
   </div>
-</form>
+</div>
 
 
 <script src="../src/vendor/jquery/jquery.min.js"></script>
