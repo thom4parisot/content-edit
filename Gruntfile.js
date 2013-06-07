@@ -18,10 +18,14 @@ module.exports = function(grunt) {
 
 		// Concat definitions
 		concat: {
-			dist: {
-				src: ["src/plugin.js"],
-				dest: "dist/jquery.content-edit.js"
-			},
+      core: {
+        src: ["src/plugin.js"],
+        dest: "dist/jquery.content-edit.js"
+      },
+      history: {
+        src: ["src/history.js"],
+        dest: "dist/jquery.content-edit-history.js"
+      },
 			options: {
 				banner: '(function($){ "use strict";',
 				footer: "})(jQuery,document,window);"
@@ -38,10 +42,14 @@ module.exports = function(grunt) {
 
 		// Minify definitions
 		uglify: {
-			my_target: {
-				src: ["dist/jquery.content-edit.js"],
-				dest: "dist/jquery.content-edit.min.js"
-			},
+      core: {
+        src: ["dist/jquery.content-edit.js"],
+        dest: "dist/jquery.content-edit.min.js"
+      },
+      history: {
+        src: ["dist/jquery.content-edit-history.js"],
+        dest: "dist/jquery.content-edit-history.min.js"
+      },
 			options: {
 				banner: "<%= meta.banner %>"
 			}

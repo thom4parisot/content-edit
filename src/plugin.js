@@ -42,6 +42,12 @@ function ContentEditPlugin(element, options) {
    */
   this.templateElement = null;
 
+  /**
+   * Plugins instance holder.
+   * @type {Object}
+   */
+  this.plugins = {};
+
   //init process. It populates the previous attributes.
   this.init();
   this.initEvents();
