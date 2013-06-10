@@ -36,11 +36,21 @@ bower install --save oncletom/content-edit
 <!DOCTYPE html>
 <html>
 <body>
-  <h1 data-editable>Sample Title</h1>
+  <h1>Are Cats more Evil then Satan?</h1>
+
+  <div data-editable>
+    <strong>Cats rule the world.</strong>
+    Cats are evil and control the world due to a virus they produce that causes
+    humans to commit suicide and causes them to get the uncontrollable urge to take
+    care of cats. The virus also infects ants so that when ants eat the cat poop they
+    go and stand up on the edge of grass so birds will eat them and then the bird is
+    infected. The bird will then fly lower or won't fly away when the cat comes near
+    so the cat can eat the bird. Very evil.
+  </div>
 
   <form data-editable-template action="/save" method="POST">
-    <label for="textfield-input-edit"></label>
-    <input type="text" name="whatever-name-you-need" data-editable-content required>
+    <label for="longtext-input-edit"></label>
+    <textarea id="longtext-input-edit" name="whatever-name-you-need" data-editable-content required></textarea>
 
     <button type="submit">Save</button>
     <button type="button" data-toggle="cancel">Cancel</button>
@@ -89,7 +99,7 @@ This HTML bit will be used by the user to edit the content.
 If used on on an editable content, it will use this specific template.
 
 ```html
-<p>This is an <a href="" data-editable data-editable-template="shorttext"></a>.</p>
+<p>This is an <a href="http://example.com" data-editable data-editable-template="shorttext">editable hyperlink</a>.</p>
 
 <form action="…" method="POST" data-editable-template="shorttext">
 …
