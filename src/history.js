@@ -37,9 +37,6 @@ ContentEditHistoryPlugin.namespace = "history";
  */
 ContentEditHistoryPlugin.prototype.init = function init(editable){
   this.historyElement = $(editable.templateElement).siblings("[data-editable-extension='history']").get(0);
-
-  //this helps to retrieve what is the source we are working on without knowing it directly
-  $(this.historyElement).data("content-edit-source", editable);
 };
 
 /**
@@ -49,6 +46,9 @@ ContentEditHistoryPlugin.prototype.init = function init(editable){
  */
 ContentEditHistoryPlugin.prototype.idle = function idle(){
   $(this.historyElement).addClass("hidden");
+
+  //this helps to retrieve what is the source we are working on without knowing it directly
+  $(this.historyElement).data("content-edit-source", null);
 };
 
 /**
@@ -57,6 +57,9 @@ ContentEditHistoryPlugin.prototype.idle = function idle(){
  * @api
  */
 ContentEditHistoryPlugin.prototype.editing = function editing(){
+  //this helps to retrieve what is the source we are working on without knowing it directly
+  $(this.historyElement).data("content-edit-source", this.editable);
+
   $(this.historyElement).removeClass("hidden");
 };
 
