@@ -165,7 +165,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
   this.previousState = this.state;
   this.state = newState;
 
-  $contentElement.trigger("editable", [this]).trigger("editable." + this.state, [this]);
+  $contentElement.trigger("editable.any", [this]).trigger("editable." + this.state, [this]);
 
   $contentElement.add(this.templateElement)
     .removeClass("editable-"+this.previousState)
@@ -179,7 +179,11 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
  * @type {Object}
  */
 ContentEditPlugin.defaults = {
-  visibilityTogglingClass: "hidden"
+  visibilityTogglingClass: "hidden",
+  preventDefault: {
+    "a": true,
+    "form": false
+  }
 };
 
 /**
@@ -214,6 +218,58 @@ $.fn.editable = function (options) {
  */
 $.fn.editable.Constructor = ContentEditPlugin;
 
+ContentEditPlugin.findContextSource = function findContextSource(context){
+  var $this = $(context), el;
+
+  /* jshint validthis:true */
+  if ($this.attr("data-editable-template")){
+    el = context;
+  }
+
+  if (!el && $this.parents("form[data-editable-template]").length){
+    el = $this.parents("form[data-editable-template]").get(0);
+  }
+
+  if (!el && $this.find("form[data-editable-template]").length){
+    el = $this.find("form[data-editable-template]").get(0);
+  }
+
+  return $(el).data("editable-source");
+};
+
+/**
+ * Handles any form submission.
+ *
+ * @todo refactor with cancelEdit
+ */
+ContentEditPlugin.submitEdit = function submitEdit (event) {
+  /* jshint validthis:true */
+  var editable = ContentEditPlugin.findContextSource(this);
+
+  if (editable.options.preventDefault.form){
+    event.preventDefault();
+  }
+
+  editable.setState("saving");
+};
+
+
+/**
+ * Handles any form cancellation.
+ *
+ * @todo refactor with submitEdit
+ */
+ContentEditPlugin.cancelEdit = function cancelEdit(event) {
+  /* jshint validthis:true */
+  var editable = ContentEditPlugin.findContextSource(this);
+
+  if (editable.options.preventDefault.a){
+    event.preventDefault();
+  }
+
+  editable.setState("idle");
+};
+
 /*
   Hooking event delegation.
  */
@@ -225,13 +281,10 @@ $.fn.editable.Constructor = ContentEditPlugin;
     $(this).editable();
   }
 
-  function cancelEdit() {
-    /* jshint validthis:true */
-    $(this).parents("form[data-editable-template]").data("editable-source").setState("idle");
-  }
-
   $document.on("click", "[data-editable]", editElement);
-  $document.on("click", "[data-editable-template] [data-toggle='cancel']", cancelEdit);
+  $document.on("submit", "[data-editable-template]", ContentEditPlugin.submitEdit);
+  $document.on("click", "[data-editable-template] [type='submit']", ContentEditPlugin.submitEdit);
+  $document.on("click", "[data-editable-template] [data-toggle='cancel']", ContentEditPlugin.cancelEdit);
 })($(document));
 
 

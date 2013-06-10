@@ -5,3 +5,21 @@
   padding-left: .2em;
   position: absolute;
 }
+
+@-webkit-keyframes rotate_loop { from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); }  }
+@-moz-keyframes rotate_loop { from { -moz-transform: rotate(0deg); } to { -moz-transform: rotate(360deg); }  }
+@-ms-keyframes rotate_loop { from { -ms-transform: rotate(0deg); } to { -ms-transform: rotate(360deg); }  }
+@-o-keyframes rotate_loop { from { -o-transform: rotate(0deg); } to { -o-transform: rotate(360deg); }  }
+@keyframes rotate_loop { from { transform: rotate(0deg); } to { transform: rotate(360deg); }  }
+
+[data-editable].editable-saving:after{
+  content: "\21bb";
+  cursor: pointer;
+  padding-left: .4em;
+  position: absolute;
+  -webkit-animation: rotate_loop 0.5s linear infinite;
+  -moz-animation: rotate_loop 0.5s linear infinite;
+  -ms-animation: rotate_loop 0.5s linear infinite;
+  -o-animation: rotate_loop 0.5s linear infinite;
+  animation: rotate_loop 0.5s linear infinite;
+}

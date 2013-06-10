@@ -114,6 +114,6 @@ ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(
 };
 
 (function($document){
-  $document.on("editable.*", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
+  $document.on("editable.any", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
   $document.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
 })($(document));

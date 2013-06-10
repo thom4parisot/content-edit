@@ -3,9 +3,12 @@
   display: none;
 }
 
-[data-editable-template]:not([data-editable]).editable-editing{
+[data-editable-template]:not([data-editable]).editable-editing,
+[data-editable-template]:not([data-editable]).editable-saving{
   display: block;
 }
-[data-editable].editable-editing{
+[data-editable].editable-editing,
+[data-editable].editable-saving,
+.editable-saving [data-editable-content]{
   opacity: 0.8;
 }
