@@ -107,6 +107,8 @@ If used on on an editable content, it will use this specific template.
 
 ### `data-editable-content`
 
+The source content will be dropped into his element to be edited by the user.
+
 ```html
 <form action="…" method="POST" data-editable-template>
 
