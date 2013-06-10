@@ -53,7 +53,6 @@ bower install --save oncletom/content-edit
     <textarea id="longtext-input-edit" name="whatever-name-you-need" data-editable-content required></textarea>
 
     <button type="submit">Save</button>
-    <button type="button" data-toggle="cancel">Cancel</button>
   </form>
 
   <script src="/path/to/jquery.min.js">
@@ -104,6 +103,95 @@ If used on on an editable content, it will use this specific template.
 <form action="…" method="POST" data-editable-template="shorttext">
 …
 </form>
+```
+
+### `data-editable-content`
+
+```html
+<form action="…" method="POST" data-editable-template>
+
+  <textarea name="…" data-editable-content required></textarea>
+
+</form>
+```
+
+### `data-toggle`
+
+Specify what general action to perform in an editable template.
+
+```html
+<form action="…" method="POST" data-editable-template>
+…
+  <button type="button" data-toggle="cancel">Cancel</button>
+</form>
+```
+
+**Natively supported**: *cancel* (resets and close the edit form).
+
+## Events
+
+Events are triggered for each *new* state change in the lifecycle of the content edit.
+The plugin even uses these events internally.
+
+### `idle`
+
+The editable content is no more edited. It appears as it was prior to its edit.
+
+```javascript
+$("[data-editable]").on("editable.idle", function(event, editable){
+  if (editable.previousState === "saving"){
+    alert("Thanks for your submission!"); //you may find a better way than `alert` to inform the user.
+  }
+});
+
+```
+
+### `editing`
+
+The editable content is asked to be edited by the user.
+
+```javascript
+// Example of AJAX saving of the content.
+$("[data-editable]").on("editable.editing", function(event, editable){
+  //display some help, transition fullscreen or whatever is relevant to assist the user
+});
+
+```
+
+### `saving`
+
+A new version of the content is requested to be saved.
+
+```javascript
+// Example of AJAX saving of the content.
+$("[data-editable]").on("editable.saving", function(event, editable){
+  event.preventDefault();
+
+  var deferred = $.post("/save", $(editable.templateElement).find(":input").serialize());
+
+  deferred.done(function saveSuccess(){
+    //use the response data to invite the user to fix his submission
+    //restore the initial state
+    editable.setState("idle");
+  });
+
+  deferred.fail(function saveFailure(){
+    //use the response data to invite the user to fix his submission
+    //return back in the edit state
+    editable.setState("editing");
+  });
+});
+
+```
+
+### `any`
+
+Special event name. It is fired every time a state change.
+
+```javascript
+$("[data-editable]").on("editable.any", function(event, editable){
+  console.log("Transitioning from %s to %s state.", editable.previousState, editable.state);
+});
 ```
 
 ## License
