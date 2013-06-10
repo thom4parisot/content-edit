@@ -94,6 +94,13 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
     .removeClass("hidden");
 };
 
+/**
+ * Set the new content value of the Content Edit form.
+ * It is not saved yet so the user can still alter it before hitting the *save* button.
+ *
+ * @api
+ * @param {String} value
+ */
 ContentEditPlugin.prototype.setContent = function setContent(value){
   $(this.templateElement).find("[data-editable-content]").val(value);
 };
