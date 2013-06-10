@@ -26,15 +26,9 @@ function ContentEditPlugin(element, options) {
 
   /**
    * DOM Element from which the edit has been requested (not necessarily the one we edit).
-   * @type {HTMLElement}
-   */
-  this.sourceElement = element;
-
-  /**
-   * DOM Element we want to edit.
    * @type {HTMLElement|null}
    */
-  this.contentElement = null;
+  this.sourceElement = null;
 
   /**
    * DOM Element used to let the user edit the content.
@@ -49,7 +43,7 @@ function ContentEditPlugin(element, options) {
   this.plugins = {};
 
   //init process. It populates the previous attributes.
-  this.init();
+  this.init(element);
   this.initEvents();
 }
 
@@ -58,11 +52,9 @@ function ContentEditPlugin(element, options) {
  *
  * @api
  */
-ContentEditPlugin.prototype.init = function init () {
-  this.contentElementLookup(this.sourceElement);
-  this.templateElementLookup(this.contentElement);
-
-  $(this.templateElement).data("editable-source", this);
+ContentEditPlugin.prototype.init = function init (sourceElement) {
+  this.sourceElement = sourceElement;
+  this.templateElementLookup(this.sourceElement);
 };
 
 /**
@@ -72,7 +64,7 @@ ContentEditPlugin.prototype.init = function init () {
  * @api
  */
 ContentEditPlugin.prototype.initEvents = function initEvents () {
-  var $contentElement = $(this.contentElement);
+  var $contentElement = $(this.sourceElement);
 
   $contentElement.on("editable.editing", $.proxy(this.startEdit, this));
   $contentElement.on("editable.idle", $.proxy(this.endEdit, this));
@@ -85,11 +77,13 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
  * @api
  */
 ContentEditPlugin.prototype.startEdit = function startEdit () {
-  this.setContent(this.contentElement.innerHTML);
+  $(this.templateElement).data("editable-source", this);
+
+  this.setContent(this.sourceElement.innerHTML);
 
   $(this.templateElement)
     .find(".original-content")
-      .text(this.contentElement.innerHTML)
+      .text(this.sourceElement.innerHTML)
       .end()
     .removeClass(this.options.visibilityTogglingClass);
 };
@@ -112,27 +106,14 @@ ContentEditPlugin.prototype.setContent = function setContent(value){
  * @api
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
+  $(this.templateElement).data("editable-source", null);
+
   $(this.templateElement)
     .addClass(this.options.visibilityTogglingClass)
     .find(".original-content")
       .text("");
 
   this.setContent("");
-};
-
-/**
- * Resolve the `contentElement`.
- * This can be either the clicked element or a link-targeted one.
- *
- * @param {HTMLElement} sourceElement
- * @returns {HTMLElement}
- */
-ContentEditPlugin.prototype.contentElementLookup = function contentElementLookup (sourceElement) {
-  var targetSelector = (sourceElement.getAttribute("href") || sourceElement.getAttribute("data-editable-target") || "").trim();
-
-  this.contentElement = (targetSelector[0] === "#" && $(targetSelector).get(0) ) || sourceElement;
-
-  return this.contentElement;
 };
 
 /**
@@ -160,7 +141,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
     return false;
   }
 
-  var $contentElement = $(this.contentElement);
+  var $contentElement = $(this.sourceElement);
 
   this.previousState = this.state;
   this.state = newState;
@@ -276,9 +257,14 @@ ContentEditPlugin.cancelEdit = function cancelEdit(event) {
 (function contentEditBootstrap($document){
   function editElement(event) {
     /* jshint validthis:true */
-    event.preventDefault();
 
-    $(this).editable();
+    var target;
+    var targetSelector = (this.getAttribute("href") || "").trim();
+
+    event.preventDefault();
+    target = (targetSelector[0] === "#" && $(targetSelector).get(0) ) || this;
+
+    $(target).editable();
   }
 
   $document.on("click", "[data-editable]", editElement);
