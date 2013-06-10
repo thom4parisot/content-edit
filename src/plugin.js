@@ -91,7 +91,7 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
     .find(".original-content")
       .text(this.contentElement.innerHTML)
       .end()
-    .show();
+    .removeClass("hidden");
 };
 
 ContentEditPlugin.prototype.setContent = function setContent(value){
@@ -106,7 +106,7 @@ ContentEditPlugin.prototype.setContent = function setContent(value){
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
   $(this.templateElement)
-    .hide()
+    .addClass("hidden")
     .find(".original-content")
       .text("");
 
