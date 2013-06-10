@@ -62,7 +62,7 @@ ContentEditPlugin.prototype.init = function init () {
   this.contentElementLookup(this.sourceElement);
   this.templateElementLookup(this.contentElement);
 
-  $(this.templateElement).data("content-edit-source", this);
+  $(this.templateElement).data("editable-source", this);
 };
 
 /**
@@ -74,8 +74,8 @@ ContentEditPlugin.prototype.init = function init () {
 ContentEditPlugin.prototype.initEvents = function initEvents () {
   var $contentElement = $(this.contentElement);
 
-  $contentElement.on("state.editing", $.proxy(this.startEdit, this));
-  $contentElement.on("state.idle", $.proxy(this.endEdit, this));
+  $contentElement.on("editable.editing", $.proxy(this.startEdit, this));
+  $contentElement.on("editable.idle", $.proxy(this.endEdit, this));
 };
 
 /**
@@ -91,7 +91,7 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
     .find(".original-content")
       .text(this.contentElement.innerHTML)
       .end()
-    .removeClass("hidden");
+    .removeClass(this.options.visibilityTogglingClass);
 };
 
 /**
@@ -113,7 +113,7 @@ ContentEditPlugin.prototype.setContent = function setContent(value){
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
   $(this.templateElement)
-    .addClass("hidden")
+    .addClass(this.options.visibilityTogglingClass)
     .find(".original-content")
       .text("");
 
@@ -165,7 +165,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
   this.previousState = this.state;
   this.state = newState;
 
-  $contentElement.trigger("state", [this]).trigger("state." + this.state, [this]);
+  $contentElement.trigger("editable", [this]).trigger("editable." + this.state, [this]);
 
   $contentElement.add(this.templateElement)
     .removeClass("editable-"+this.previousState)
@@ -179,6 +179,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
  * @type {Object}
  */
 ContentEditPlugin.defaults = {
+  visibilityTogglingClass: "hidden"
 };
 
 /**
@@ -226,7 +227,7 @@ $.fn.editable.Constructor = ContentEditPlugin;
 
   function cancelEdit() {
     /* jshint validthis:true */
-    $(this).parents("form[data-editable-template]").data("content-edit-source").setState("idle");
+    $(this).parents("form[data-editable-template]").data("editable-source").setState("idle");
   }
 
   $document.on("click", "[data-editable]", editElement);

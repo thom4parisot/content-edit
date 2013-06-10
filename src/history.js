@@ -110,10 +110,10 @@ ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(
   var history = editable.plugins[ContentEditHistoryPlugin.namespace];
   var revisionAction = this.getAttribute("data-editable-history-action") + "Revision";
 
-  history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".data-editable-history-item").get(0) );
+  history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".editable-history-item").get(0) );
 };
 
 (function($document){
-  $document.on("state.*", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
+  $document.on("editable.*", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
   $document.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
 })($(document));
