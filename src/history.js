@@ -24,6 +24,12 @@ function ContentEditHistoryPlugin(editable){
 }
 
 /**
+ * Plugin Namespace.
+ * @type {string}
+ */
+ContentEditHistoryPlugin.namespace = "history";
+
+/**
  * Initialize the plugin for the first time.
  * It will mostly resolves dependencies and link them together.
  *
@@ -84,10 +90,10 @@ ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisi
  * @param {ContentEditPlugin} editable
  */
 ContentEditHistoryPlugin.bootstrap = function bootstrapContentEditHistoryPlugin(event, editable){
-  var history = editable.plugins.history;
+  var history = editable.plugins[ContentEditHistoryPlugin.namespace];
 
   if (!history){
-    history = editable.plugins.history = new ContentEditHistoryPlugin(editable);
+    history = editable.plugins[ContentEditHistoryPlugin.namespace] = new ContentEditHistoryPlugin(editable);
   }
 
   // where all the magic happens!
@@ -101,7 +107,7 @@ ContentEditHistoryPlugin.bootstrap = function bootstrapContentEditHistoryPlugin(
  */
 ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(){
   var editable = $(this).parents("[data-editable-extension='history']").data("content-edit-source");
-  var history = editable.plugins.history;
+  var history = editable.plugins[ContentEditHistoryPlugin.namespace];
   var revisionAction = this.getAttribute("data-editable-history-action") + "Revision";
 
   history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".data-editable-history-item").get(0) );
