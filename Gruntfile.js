@@ -75,7 +75,8 @@ module.exports = function(grunt) {
         dest: "dist/jquery.content-edit-history.min.js"
       },
 			options: {
-				banner: "<%= meta.banner %>"
+				banner: "<%= meta.banner %>",
+        report: "gzip"
 			}
 		},
 
