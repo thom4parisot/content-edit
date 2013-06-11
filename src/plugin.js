@@ -53,6 +53,10 @@ function ContentEditPlugin(element, options) {
  * @api
  */
 ContentEditPlugin.prototype.init = function init (sourceElement) {
+  if (!sourceElement.hasAttribute("data-editable")){
+    sourceElement.setAttribute("data-editable", "");
+  }
+
   this.sourceElement = sourceElement;
   this.templateElementLookup(this.sourceElement);
 };
