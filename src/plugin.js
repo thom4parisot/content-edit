@@ -188,29 +188,12 @@ ContentEditPlugin.defaults = {
 ContentEditPlugin.states = ["idle", "editing", "saving"];
 
 /**
- * Public jQuery Plugin Declaration.
+ * Find the editable template contextual to an HTML element.
  *
- * @param {Object|String=} options
- * @returns {jQuery}
+ * @static
+ * @param {HTMLElement} context
+ * @returns {ContentEditPlugin} Editable plugin setup related to the `context` element.
  */
-$.fn.editable = function (options) {
-  return this.each(function () {
-    if (!$.data(this, "plugin_editable")) {
-      $.data(this, "plugin_editable", new ContentEditPlugin(this, typeof options === "object" && options));
-    }
-
-    if (typeof options === "string" || options === undefined) {
-      $.data(this, "plugin_editable").setState(options || "editing");
-    }
-  });
-};
-
-
-/*
-  Exposing the Plugin API
- */
-$.fn.editable.Constructor = ContentEditPlugin;
-
 ContentEditPlugin.findContextSource = function findContextSource(context){
   var $this = $(context), el;
 
@@ -234,8 +217,10 @@ ContentEditPlugin.findContextSource = function findContextSource(context){
  * Handles any form submission.
  *
  * @todo refactor with cancelEdit
+ * @static
+ * @param {MouseEvent} event
  */
-ContentEditPlugin.submitEdit = function submitEdit (event) {
+ContentEditPlugin.UISubmitHandler = function UISubmitHandler (event) {
   /* jshint validthis:true */
   var editable = ContentEditPlugin.findContextSource(this);
 
@@ -251,8 +236,10 @@ ContentEditPlugin.submitEdit = function submitEdit (event) {
  * Handles any form cancellation.
  *
  * @todo refactor with submitEdit
+ * @static
+ * @param {MouseEvent} event
  */
-ContentEditPlugin.cancelEdit = function cancelEdit(event) {
+ContentEditPlugin.UICancelHandler = function UICancelHandler (event) {
   /* jshint validthis:true */
   var editable = ContentEditPlugin.findContextSource(this);
 
@@ -263,26 +250,64 @@ ContentEditPlugin.cancelEdit = function cancelEdit(event) {
   editable.setState("idle");
 };
 
+/**
+ * Handle the click on an editable element.
+ * Delegates to a remote editable if it's an hyperlink whose anchor resolves an editable element.
+ *
+ * @static
+ * @param {MouseEvent} event
+ * @constructor
+ */
+ContentEditPlugin.UIEDitHandler = function UIEDitHandler (event) {
+  /* jshint validthis:true */
+
+  var target;
+  var targetSelector = (this.getAttribute("href") || "").trim();
+
+  event.preventDefault();
+  target = (targetSelector[0] === "#" && $(targetSelector).get(0) ) || this;
+
+  $(target).editable();
+};
+
+/**
+ * Hook Event Delegation on a context.
+ * Usually the context is `$(document)`.
+ *
+ * @static
+ * @param {jQuery} $context
+ */
+ContentEditPlugin.dispatch = function dispatch($context){
+  $context.on("click", "[data-editable]", ContentEditPlugin.UIEDitHandler);
+  $context.on("submit", "[data-editable-template]", ContentEditPlugin.UISubmitHandler);
+  $context.on("click", "[data-editable-template] [type='submit']", ContentEditPlugin.UISubmitHandler);
+  $context.on("click", "[data-editable-template] [data-toggle='cancel']", ContentEditPlugin.UICancelHandler);
+};
+
+
+/**
+ * Public jQuery Plugin Declaration.
+ *
+ * @param {Object|String=} options
+ * @returns {jQuery}
+ */
+$.fn.editable = function (options) {
+  return this.each(function () {
+    if (!$.data(this, "plugin_editable")) {
+      $.data(this, "plugin_editable", new ContentEditPlugin(this, typeof options === "object" && options));
+    }
+
+    if (typeof options === "string" || options === undefined) {
+      $.data(this, "plugin_editable").setState(options || "editing");
+    }
+  });
+};
+
+$.fn.editable.Constructor = ContentEditPlugin;
+
 /*
   Hooking event delegation.
  */
-(function contentEditBootstrap($document){
-  function editElement(event) {
-    /* jshint validthis:true */
-
-    var target;
-    var targetSelector = (this.getAttribute("href") || "").trim();
-
-    event.preventDefault();
-    target = (targetSelector[0] === "#" && $(targetSelector).get(0) ) || this;
-
-    $(target).editable();
-  }
-
-  $document.on("click", "[data-editable]", editElement);
-  $document.on("submit", "[data-editable-template]", ContentEditPlugin.submitEdit);
-  $document.on("click", "[data-editable-template] [type='submit']", ContentEditPlugin.submitEdit);
-  $document.on("click", "[data-editable-template] [data-toggle='cancel']", ContentEditPlugin.cancelEdit);
-})($(document));
+(ContentEditPlugin.dispatch)($(document));
 
 

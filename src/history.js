@@ -116,7 +116,7 @@ ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisi
  * @param {MouseEvent} event
  * @param {ContentEditPlugin} editable
  */
-ContentEditHistoryPlugin.bootstrap = function bootstrapContentEditHistoryPlugin(event, editable){
+ContentEditHistoryPlugin.UIStateHandler = function UIStateHandler(event, editable){
   var history = editable.plugins[ContentEditHistoryPlugin.namespace];
 
   if (!history){
@@ -142,9 +142,18 @@ ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(
   history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".editable-history-item").get(0) );
 };
 
+/**
+ * Hook Event Delegation on a context.
+ * Usually the context is `$(document)`.
+ *
+ * @static
+ * @param {jQuery} $context
+ */
+ContentEditHistoryPlugin.dispatch = function dispatch($context){
+  $context.on("editable.any", "[data-editable]", ContentEditHistoryPlugin.UIStateHandler);
+  $context.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
+};
+
 $.fn.editable.historyPluginConstructor = ContentEditHistoryPlugin;
 
-(function($document){
-  $document.on("editable.any", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
-  $document.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
-})($(document));
+(ContentEditHistoryPlugin.dispatch)($(document));
