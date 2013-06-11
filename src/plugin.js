@@ -197,8 +197,12 @@ ContentEditPlugin.states = ["idle", "editing", "saving"];
 ContentEditPlugin.findContextSource = function findContextSource(context){
   var $this = $(context), el;
 
+  if (!context){
+    return $this;
+  }
+
   /* jshint validthis:true */
-  if ($this.attr("data-editable-template")){
+  if (context.hasAttribute("data-editable-template") && !context.hasAttribute("data-editable")){
     el = context;
   }
 

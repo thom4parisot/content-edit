@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>$.editable - Revision History</title>
+  <title>$.editable</title>
   <link rel="stylesheet" href="../src/vendor/qunit/qunit.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
   </div>
 
   <div class="templates">
-    <form data-editable-template="longtext" action="#" method="POST">
+    <form data-editable-template="longtext" action="#" method="POST" id="longtext-template">
       <textarea name="content" cols="30" rows="10" data-editable-content required></textarea>
 
       <input type="submit" value="Save" />
@@ -34,7 +34,7 @@
 
   <div class="templates-alt">
     <div class="deeper-level">
-      <form data-editable-template action="#" method="POST">
+      <form data-editable-template action="#" method="POST" id="regular-template">
         <input type="text" name="content" data-editable-content required />
 
         <blockquote class="original-content"></blockquote>
