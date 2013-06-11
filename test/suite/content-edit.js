@@ -89,4 +89,10 @@
       identifier: "longtext"
     }) );
   });
+
+  test("Tricky workflow", function(){
+    var $regularTemplateContent = $("#editable-title");
+    var $regularProxyTemplateContent = $("a[data-editable]");
+    var $customTemplateContent = $("#qunit-fixture div[data-editable-template]");
+  });
 })(jQuery);

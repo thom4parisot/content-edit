@@ -9,11 +9,13 @@
 <div id="qunit"></div>
 <div id="qunit-fixture">
 
-  <h2 data-editable>Editable Title</h2>
+  <h2 data-editable id="editable-title">Editable Title</h2>
 
   <p class="non-editable">Edit me if you can.</p>
 
   <p data-editable>This paragraph should be then editable.</p>
+
+  <p>This paragraph is not editable but <a href="#editable-title" data-editable>the remote title yes</a>.</p>
 
   <div data-editable data-editable-template="longtext">
     <p>Paul Martin and the team are at Stroud's Subscription Rooms.</p>
