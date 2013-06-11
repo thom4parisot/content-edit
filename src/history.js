@@ -39,11 +39,28 @@ ContentEditHistoryPlugin.prototype.init = function init(editable){
   this.historyElement = this.resolveHistoryElement(editable);
 };
 
+/**
+ * Resolve the history element location.
+ * By default, a sibling in the same location, otherwise document lookup.
+ *
+ * @param {ContentEditPlugin} editable
+ * @returns {HTMLElement}
+ */
 ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHistoryElement(editable){
   var el;
   var $templateElement = $(editable.templateElement);
+  var selector = editable.selector(ContentEditHistoryPlugin.namespace);
 
-  return $templateElement.siblings("[data-editable-"+ContentEditHistoryPlugin.namespace+"]").get(0);
+  var lookups = [
+    function(s){ return $templateElement.siblings(s); },
+    function(s){ return $(s); }
+  ];
+
+  while(!el && lookups){
+    el = lookups.shift()(selector).get(0);
+  }
+
+  return el;
 };
 
 /**

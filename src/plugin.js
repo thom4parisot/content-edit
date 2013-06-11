@@ -58,6 +58,18 @@ ContentEditPlugin.prototype.init = function init (sourceElement) {
 };
 
 /**
+ *
+ * @api
+ * @param {String} namespace
+ * @returns {string}
+ */
+ContentEditPlugin.prototype.selector = function selector (namespace) {
+  return "[data-editable-%ns%='%id%']"
+    .replace("%ns%", namespace)
+    .replace("%id%", this.templateElement.getAttribute("data-editable-template") || "");
+};
+
+/**
  * Initialize events by… hooking events on the contentElement.
  * We act this way to let the build process totally modular and expandable at no cost.
  *

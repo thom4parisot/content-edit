@@ -27,23 +27,22 @@
   You can also <a href="#editable-paragraph" data-editable>click to edit the first paragraph</a>.
 </small></p>
 
-<!-- Default Editable Template -->
-<form action="#" data-editable-template>
-  <h2>Edit this content</h2>
-
-  <textarea name="content" cols="30" rows="10" data-editable-content required></textarea>
-
-  <blockquote class="original-content"></blockquote>
-
-  <div class="form-actions">
-    <input class="btn btn-main" type="submit" value="Save" />
-    <input class="btn" type="button" value="Cancel" data-toggle="cancel" />
-  </div>
-</form>
-
-
-<!-- Alternate Hyperlink Template -->
 <div class="container">
+  <!-- Default Editable Template -->
+  <form action="#" data-editable-template>
+    <h2>Edit this content</h2>
+
+    <textarea name="content" cols="30" rows="10" data-editable-content required></textarea>
+
+    <blockquote class="original-content"></blockquote>
+
+    <div class="form-actions">
+      <input class="btn btn-main" type="submit" value="Save" />
+      <input class="btn" type="button" value="Cancel" data-toggle="cancel" />
+    </div>
+  </form>
+
+  <!-- Hyperlink Editable Template -->
   <form action="#" data-editable-template="hyperlink">
     <h2>Edit this hyperlink</h2>
     <input type="text" name="content" data-editable-content required />
@@ -56,38 +55,36 @@
     </div>
   </form>
 
-  <!-- Revision History Module -->
-  <div class="content-history hidden" data-editable-history>
+  <!-- Revision History Module for Hyperlink Template -->
+  <div class="content-history hidden" data-editable-history="hyperlink">
     <h2>Hyperlink Revisions History</h2>
 
-    <div data-editable-history>
-      <ul class="editable-history-list">
-        <li class="editable-history-item">
-          <p data-editable-history-revision>Smiles are contagious, so be a carrier.</p>
+    <ul class="editable-history-list">
+      <li class="editable-history-item">
+        <p data-editable-history-revision>Smiles are contagious, so be a carrier.</p>
 
-          <ul class="actions">
-            <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
-            <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
-          </ul>
-        </li>
-        <li class="editable-history-item">
-          <p data-editable-history-revision>Keep calm: The first five days after the weekend are the hardest! </p>
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
+        </ul>
+      </li>
+      <li class="editable-history-item">
+        <p data-editable-history-revision>Keep calm: The first five days after the weekend are the hardest! </p>
 
-          <ul class="actions">
-            <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
-            <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
-          </ul>
-        </li>
-        <li class="editable-history-item">
-          <p data-editable-history-revision>The hardest thing ever is to control your laughter at serious times.</p>
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
+        </ul>
+      </li>
+      <li class="editable-history-item">
+        <p data-editable-history-revision>The hardest thing ever is to control your laughter at serious times.</p>
 
-          <ul class="actions">
-            <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
-            <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
 
@@ -95,34 +92,32 @@
   <div class="content-history hidden" data-editable-history>
     <h2>Revisions History</h2>
 
-    <div data-editable-history>
-      <ul class="editable-history-list">
-        <li class="editable-history-item">
-          <div data-editable-history-revision>
-            <p>The Queen officially opens the BBC's rebuilt Broadcasting House, creating a memorable TV moment by appearing behind the newsreaders.</p>
-          </div>
+    <ul class="editable-history-list">
+      <li class="editable-history-item">
+        <div data-editable-history-revision>
+          <p>The Queen officially opens the BBC's rebuilt Broadcasting House, creating a memorable TV moment by appearing behind the newsreaders.</p>
+        </div>
 
-          <ul class="actions">
-            <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
-            <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
-          </ul>
-        </li>
-        <li class="editable-history-item">
-          <div data-editable-history-revision>
-            <p>Paul Martin and the team are at Stroud's Subscription Rooms.</p>
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
+        </ul>
+      </li>
+      <li class="editable-history-item">
+        <div data-editable-history-revision>
+          <p>Paul Martin and the team are at Stroud's Subscription Rooms.</p>
 
-            <p>Paul is joined in the hunt for exciting antiques and collectibles by experts James Lewis and Kate Bliss. Kate becomes intrigued by an astrological teapot, but the star of the show is another item for dining in style, a regency tea caddy found by James.</p>
+          <p>Paul is joined in the hunt for exciting antiques and collectibles by experts James Lewis and Kate Bliss. Kate becomes intrigued by an astrological teapot, but the star of the show is another item for dining in style, a regency tea caddy found by James.</p>
 
-            <p>Paul visits the home of Edward Jenner, to find out how this man changed the face of medicine.</p>
-          </div>
+          <p>Paul visits the home of Edward Jenner, to find out how this man changed the face of medicine.</p>
+        </div>
 
-          <ul class="actions">
-            <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
-            <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
 
