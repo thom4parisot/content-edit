@@ -8,7 +8,42 @@
 <body>
 <div id="qunit"></div>
 <div id="qunit-fixture">
-  <input type="text" class="textfield-as-searchfield">
+
+  <h2 data-editable>Editable Title</h2>
+
+  <p class="non-editable">Edit me if you can.</p>
+
+  <p data-editable>This paragraph should be then editable.</p>
+
+  <div data-editable data-editable-template="longtext">
+    <p>Paul Martin and the team are at Stroud's Subscription Rooms.</p>
+
+    <p>Paul is joined in the hunt for exciting antiques and collectibles by experts James Lewis and Kate Bliss. Kate becomes intrigued by an astrological teapot, but the star of the show is another item for dining in style, a regency tea caddy found by James.</p>
+
+    <p>Paul visits the home of Edward Jenner, to find out how this man changed the face of medicine.</p>
+  </div>
+
+  <div class="templates">
+    <form data-editable-template="longtext" action="#" method="POST">
+      <textarea name="content" cols="30" rows="10" data-editable-content required></textarea>
+
+      <input type="submit" value="Save" />
+      <input type="button" value="Cancel" data-toggle="cancel" />
+    </form>
+  </div>
+
+  <div class="templates-alt">
+    <div class="deeper-level">
+      <form data-editable-template action="#" method="POST">
+        <input type="text" name="content" data-editable-content required />
+
+        <blockquote class="original-content"></blockquote>
+
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+
 </div>
 <script src="../src/vendor/jquery/jquery.min.js"></script>
 <script>jQuery.noConflict();</script>
