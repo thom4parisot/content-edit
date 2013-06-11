@@ -36,7 +36,14 @@ ContentEditHistoryPlugin.namespace = "history";
  * @param {ContentEditPlugin} editable
  */
 ContentEditHistoryPlugin.prototype.init = function init(editable){
-  this.historyElement = $(editable.templateElement).siblings("[data-editable-extension='history']").get(0);
+  this.historyElement = this.resolveHistoryElement(editable);
+};
+
+ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHistoryElement(editable){
+  var el;
+  var $templateElement = $(editable.templateElement);
+
+  return $templateElement.siblings("[data-editable-"+ContentEditHistoryPlugin.namespace+"]").get(0);
 };
 
 /**
@@ -109,10 +116,12 @@ ContentEditHistoryPlugin.bootstrap = function bootstrapContentEditHistoryPlugin(
  * @api
  */
 ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(){
-  var editable = $(this).parents("[data-editable-extension='history']").data("content-edit-source");
-  var history = editable.plugins[ContentEditHistoryPlugin.namespace];
-  var revisionAction = this.getAttribute("data-editable-history-action") + "Revision";
+  var ns = ContentEditHistoryPlugin.namespace;
 
+  var editable = $(this).parents("[data-editable-"+ns+"]").data("content-edit-source");
+  var revisionAction = this.getAttribute("data-editable-"+ns+"-action") + "Revision";
+
+  var history = editable.plugins[ns];
   history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".editable-history-item").get(0) );
 };
 
