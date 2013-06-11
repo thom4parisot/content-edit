@@ -22,6 +22,20 @@
     equal(f( document.querySelector("textarea") ).get(0), document.querySelector("#longtext-template"));
   });
 
+  test("Uneditable elements", function(){
+    var $nonEditableElement = $(".non-editable:first");
+
+    function testSuite(){
+      deepEqual(/editable-/.test($nonEditableElement.attr("class")), false, "No editable class has been detected.");
+      deepEqual($("[data-editable-template].editable-editing").length, 0, "No editable form is active.");
+      deepEqual($("[data-editable-template] [data-editable-content]").text(), "", "Editable form content is empty.");
+    }
+
+    testSuite();
+    $nonEditableElement.trigger("click");
+    testSuite();
+  });
+
   test("Edit and Cancel (regular)", function(){
     var $editableContent = $("#qunit-fixture h2");
     $editableContent.trigger("click");
@@ -44,23 +58,20 @@
     notDeepEqual($editableContent.text(), "Brand New Title", "Original title has not changed.");
   });
 
-  test("Uneditable elements", function(){
-    var $nonEditableElement = $(".non-editable:first");
-
-    function testSuite(){
-      deepEqual(/editable-/.test($nonEditableElement.attr("class")), false, "No editable class has been detected.");
-      deepEqual($("[data-editable-template].editable-editing").length, 0, "No editable form is active.");
-      deepEqual($("[data-editable-template] [data-editable-content]").text(), "", "Editable form content is empty.");
-    }
-
-    testSuite();
-    $nonEditableElement.trigger("click");
-    testSuite();
-  });
-
   test("Edit and Cancel (custom template)", function(){
-    expect(0);
+    var $editableContent = $("#qunit-fixture div[data-editable-template]");
+    $editableContent.trigger("click");
 
+    ok($("#longtext-template.editable-editing").length, "Template transitioned to editing state.");
+    deepEqual($("form[data-editable-template].editable-editing").length, 1, "No other template has been opened.");
+    deepEqual($("#longtext-template [data-editable-content]").val(), $editableContent.html(), "Original content is ready to be edited.");
+    deepEqual($("#longtext-template .original-content").text(), $editableContent.html(), "Original content is also available read-only.");
+
+    $editableContent.data("plugin_editable").setState("idle");
+
+    ok($("#longtext-template.editable-idle").length, "Template transitioned to idle state.");
+    deepEqual($("form[data-editable-template].editable-idle").length, 1, "No other template has been canceled.");
+    notDeepEqual($editableContent.text(), "Brand New Content", "Original title has not changed.");
   });
 
   test("Manual transformed as editable.", function(){
