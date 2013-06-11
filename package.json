@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "grunt test --verbose",
-    "postinstall": "bower install"
+    "postinstall": "bower install && grunt build",
+    "postupdate": "grunt build"
   }
 }
