@@ -53,6 +53,8 @@ bower install --save oncletom/content-edit
 </html>
 ```
 
+For a more in-depth example, checkout the project and [run the demo](demo/index.html).
+
 ## `data-*` Attributes API
 
 Every setting is scoped by the `data-editable` attribute.
