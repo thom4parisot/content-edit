@@ -142,6 +142,8 @@ ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(
   history.historyElement && history[revisionAction] && history[revisionAction]( $(this).parents(".editable-history-item").get(0) );
 };
 
+$.fn.editable.historyPluginConstructor = ContentEditHistoryPlugin;
+
 (function($document){
   $document.on("editable.any", "[data-editable]", ContentEditHistoryPlugin.bootstrap);
   $document.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
