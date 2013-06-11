@@ -1,5 +1,7 @@
 # Content Edit
 
+[![Build Status](https://travis-ci.org/oncletom/content-edit.png?branch=master)](https://travis-ci.org/oncletom/content-edit)
+
 **Content Edit** is a jQuery plugin to edit an HTML content the good way.
 
 Its goal is to process only the frontend part: pick a content, let the user edit it and notify your backend.
