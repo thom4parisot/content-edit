@@ -12,18 +12,6 @@ The idea is then too *almost look inline edit* but
 to **fully rely on HTML forms you totally own and control**.
 
 
-## Concepts
-
-Here are some key concepts to know to understand the way this plugin is architectured.
-
-### Editable Content
-
-This is the *content we want to edit*.
-
-### Editable Template
-
-This is the *template UI used to edit*.
-
 ## Install
 
 ```bash
@@ -38,6 +26,7 @@ bower install --save oncletom/content-edit
 <body>
   <h1>Are Cats more Evil then Satan?</h1>
 
+  <!-- Editable Content -->
   <div data-editable>
     <strong>Cats rule the world.</strong>
     Cats are evil and control the world due to a virus they produce that causes
@@ -48,6 +37,7 @@ bower install --save oncletom/content-edit
     so the cat can eat the bird. Very evil.
   </div>
 
+  <!-- Template Used to edit the content -->
   <form data-editable-template action="/save" method="POST">
     <label for="longtext-input-edit"></label>
     <textarea id="longtext-input-edit" name="whatever-name-you-need" data-editable-content required></textarea>
@@ -74,7 +64,7 @@ Minilistic example:
 <p data-editable>This paragraph content will be editable.</p>
 ```
 
-### `data-editable` + `href`
+#### `data-editable` + `href`
 
 Used in combination, it acts as a proxy for another editable content in the document.
 
@@ -82,6 +72,20 @@ Used in combination, it acts as a proxy for another editable content in the docu
 <p data-editable id="edit-me-please">I am editable from 2 places, isn't it great?</p>
 
 <p><a href="#edit-me-please" data-editable>Click me to edit the paragraph</a>.</p>
+```
+
+#### `data-editable` + `data-editable-template="identifier"`
+
+Used in combination, it will use this specific and unique template for the edit.
+
+```html
+<p>This is an <a href="http://example.com" data-editable data-editable-template="shorttext">editable hyperlink</a>.</p>
+
+…
+
+<form action="…" method="POST" data-editable-template="shorttext">
+…
+</form>
 ```
 
 ### `data-editable-template`
@@ -95,17 +99,7 @@ This HTML bit will be used by the user to edit the content.
 </form>
 ```
 
-If used on on an editable content, it will use this specific template.
-
-```html
-<p>This is an <a href="http://example.com" data-editable data-editable-template="shorttext">editable hyperlink</a>.</p>
-
-<form action="…" method="POST" data-editable-template="shorttext">
-…
-</form>
-```
-
-### `data-editable-content`
+### `data-editable-template`
 
 The source content will be dropped into his element to be edited by the user.
 
