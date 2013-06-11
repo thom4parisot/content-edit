@@ -54,7 +54,7 @@ function ContentEditPlugin(element, options) {
  */
 ContentEditPlugin.prototype.init = function init (sourceElement) {
   if (!sourceElement.hasAttribute("data-editable")){
-    sourceElement.setAttribute("data-editable", "");
+    sourceElement.setAttribute("data-editable", this.options.identifier);
   }
 
   this.sourceElement = sourceElement;
@@ -176,6 +176,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
  * @type {Object}
  */
 ContentEditPlugin.defaults = {
+  identifier: "",
   visibilityTogglingClass: "hidden",
   preventDefault: {
     "a": true,

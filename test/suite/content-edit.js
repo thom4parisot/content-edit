@@ -24,6 +24,21 @@
     notDeepEqual($editableContent.text(), "Brand New Title", "Original title has not changed.");
   }
 
+  function customTemplateTests($editableContent){
+    $editableContent.trigger("click");
+
+    ok($("#longtext-template.editable-editing").length, "Template transitioned to editing state.");
+    deepEqual($("form[data-editable-template].editable-editing").length, 1, "No other template has been opened.");
+    deepEqual($("#longtext-template [data-editable-content]").val(), $editableContent.html(), "Original content is ready to be edited.");
+    deepEqual($("#longtext-template .original-content").text(), $editableContent.html(), "Original content is also available read-only.");
+
+    $editableContent.data("plugin_editable").setState("idle");
+
+    ok($("#longtext-template.editable-idle").length, "Template transitioned to idle state.");
+    deepEqual($("form[data-editable-template].editable-idle").length, 1, "No other template has been canceled.");
+    notDeepEqual($editableContent.text(), "Brand New Content", "Original title has not changed.");
+  }
+
   test("Basics", function(){
     ok($.fn.editable, "Plugin exists");
     deepEqual($("[data-editable-template][class*='editable-']").length, 0, "Everything remained untouched.");
@@ -62,22 +77,16 @@
   });
 
   test("Edit and Cancel (custom template)", function(){
-    var $editableContent = $("#qunit-fixture div[data-editable-template]");
-    $editableContent.trigger("click");
-
-    ok($("#longtext-template.editable-editing").length, "Template transitioned to editing state.");
-    deepEqual($("form[data-editable-template].editable-editing").length, 1, "No other template has been opened.");
-    deepEqual($("#longtext-template [data-editable-content]").val(), $editableContent.html(), "Original content is ready to be edited.");
-    deepEqual($("#longtext-template .original-content").text(), $editableContent.html(), "Original content is also available read-only.");
-
-    $editableContent.data("plugin_editable").setState("idle");
-
-    ok($("#longtext-template.editable-idle").length, "Template transitioned to idle state.");
-    deepEqual($("form[data-editable-template].editable-idle").length, 1, "No other template has been canceled.");
-    notDeepEqual($editableContent.text(), "Brand New Content", "Original title has not changed.");
+    customTemplateTests($("#qunit-fixture div[data-editable-template]"));
   });
 
-  test("Manual transformed as editable.", function(){
+  test("Manual transformed as editable (regular)", function(){
     regularTests( $(".non-editable:first").editable({}) );
+  });
+
+  test("Manual transformed as editable (custom template)", function(){
+    regularTests( $(".non-editable:first").editable({
+      identifier: "longtext"
+    }) );
   });
 })(jQuery);
