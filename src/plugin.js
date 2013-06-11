@@ -192,7 +192,7 @@ ContentEditPlugin.states = ["idle", "editing", "saving"];
  *
  * @static
  * @param {HTMLElement} context
- * @returns {ContentEditPlugin} Editable plugin setup related to the `context` element.
+ * @returns {jQuery} The DOM element supposed to contain a link the editable content.
  */
 ContentEditPlugin.findContextSource = function findContextSource(context){
   var $this = $(context), el;
@@ -210,7 +210,7 @@ ContentEditPlugin.findContextSource = function findContextSource(context){
     el = $this.find("form[data-editable-template]").get(0);
   }
 
-  return $(el).data("editable-source");
+  return $(el);
 };
 
 /**
@@ -222,7 +222,7 @@ ContentEditPlugin.findContextSource = function findContextSource(context){
  */
 ContentEditPlugin.UISubmitHandler = function UISubmitHandler (event) {
   /* jshint validthis:true */
-  var editable = ContentEditPlugin.findContextSource(this);
+  var editable = ContentEditPlugin.findContextSource(this).data("editable-source");
 
   if (editable.options.preventDefault.form){
     event.preventDefault();
@@ -241,7 +241,7 @@ ContentEditPlugin.UISubmitHandler = function UISubmitHandler (event) {
  */
 ContentEditPlugin.UICancelHandler = function UICancelHandler (event) {
   /* jshint validthis:true */
-  var editable = ContentEditPlugin.findContextSource(this);
+  var editable = ContentEditPlugin.findContextSource(this).data("editable-source");
 
   if (editable.options.preventDefault.a){
     event.preventDefault();
