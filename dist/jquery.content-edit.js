@@ -159,6 +159,8 @@ ContentEditPlugin.prototype.onSave = function onSave () {
  * @param {String} value
  */
 ContentEditPlugin.prototype.setContent = function setContent(value){
+  value = this.applyFilters(value, this.options.inputFilters);
+
   $(this.templateElement).find("[data-editable-content]").val(value);
 
   this.oldValue = this.value;
@@ -203,6 +205,26 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
 };
 
 /**
+ * Apply filters on a content, basically an editable content value.
+ *
+ * @todo static method?
+ * @param {String} content
+ * @param {Array|Function} filters
+ * @returns {String}
+ */
+ContentEditPlugin.prototype.applyFilters = function applyFilters(content, filters){
+  if (!$.isArray(filters)){
+    filters = $.isFunction(filters) ? [filters] : [];
+  }
+
+  $.each(filters, function filterInputIteration(filter){
+    content = filter(content);
+  });
+
+  return content;
+};
+
+/**
  * Default plugin options.
  * Override them to alter *all the future new instances* of content edition.
  *
@@ -214,7 +236,10 @@ ContentEditPlugin.defaults = {
   preventDefault: {
     "a": true,
     "form": false
-  }
+  },
+  inputFilters: [
+    "trim" in String.prototype && function(text){ return text.trim(); }
+  ]
 };
 
 /**
