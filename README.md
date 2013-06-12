@@ -197,5 +197,6 @@ $("[data-editable]").on("editable.any", function(event, editable){
 ## License
 
 This software is edited under the [Apache 2.0 license](http://opensource.org/licenses/Apache-2.0).
+
 This software is developped by [Thomas Parisot](https://oncletom.io) for the [BBC R&D](http://www.bbc.co.uk/rd).
 
