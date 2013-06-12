@@ -165,7 +165,10 @@ A new version of the content is requested to be saved.
 $("[data-editable]").on("editable.saving", function(event, editable){
   event.preventDefault();
 
-  var deferred = $.post("/save", $(editable.templateElement).find(":input").serialize());
+  var deferred = $.post("/save", {
+    value: editable.value,
+    oldValue: editable.oldValue
+  });
 
   deferred.done(function saveSuccess(){
     //use the response data to invite the user to fix his submission
