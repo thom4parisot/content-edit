@@ -33,7 +33,7 @@
 
     ok($("#longtext-template.editable-editing").length, "Template transitioned to editing state.");
     deepEqual($("form[data-editable-template].editable-editing").length, 1, "No other template has been opened.");
-    deepEqual($("#longtext-template [data-editable-content]").val(), $editableContent.html(), "Original content is ready to be edited.");
+    deepEqual($("#longtext-template [data-editable-content]").val(), $editableContent.html().trim(), "Original content is ready to be edited.");
     deepEqual($("#longtext-template .original-content").text(), $editableContent.html(), "Original content is also available read-only.");
 
     $editableContent.data("plugin_editable").setState("idle");

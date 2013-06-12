@@ -217,8 +217,10 @@ ContentEditPlugin.prototype.applyFilters = function applyFilters(content, filter
     filters = $.isFunction(filters) ? [filters] : [];
   }
 
-  $.each(filters, function filterInputIteration(filter){
-    content = filter(content);
+  $.each(filters, function filterInputIteration(i, filter){
+    if ($.isFunction(filter)){
+      content = filter(content);
+    }
   });
 
   return content;
