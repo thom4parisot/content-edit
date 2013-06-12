@@ -3,25 +3,28 @@
 
   var ContentEditPlugin = $.fn.editable.Constructor;
 
-  function regularTests($editableContent){
-    var $cancelButton = $("#regular-template [data-toggle='cancel']");
+  module("ContentEditPlugin");
+
+  function regularTests($editableContent, template){
+    var $template = $("#" + (template || "regular") + "-template");
+    var $cancelButton = $template.find("[data-toggle='cancel']");
     $editableContent.trigger("click");
 
-    ok($("#regular-template.editable-editing").length, "Template transitioned to editing state.");
+    ok($template.hasClass("editable-editing"), "Template transitioned to editing state.");
     deepEqual($("form[data-editable-template].editable-editing").length, 1, "No other template has been opened.");
-    deepEqual($("#regular-template [data-editable-content]").val(), $editableContent.text(), "Original content is ready to be edited.");
-    deepEqual($("#regular-template .original-content").text(), $editableContent.text(), "Original content is also available read-only.");
+    deepEqual($template.find("[data-editable-content]").val(), $editableContent.text(), "Original content is ready to be edited.");
+    deepEqual($template.find(".original-content").text(), $editableContent.text(), "Original content is also available read-only.");
 
     $editableContent.data("plugin_editable").setContent("Brand New Title");
-    deepEqual($("#regular-template [data-editable-content]").val(), "Brand New Title", "Editable content field has changed.");
-    deepEqual($("#regular-template .original-content").text(), $editableContent.text(), "Read-only content remained untouched.");
+    deepEqual($template.find("[data-editable-content]").val(), "Brand New Title", "Editable content field has changed.");
+    deepEqual($template.find(".original-content").text(), $editableContent.text(), "Read-only content remained untouched.");
 
     $cancelButton.trigger("click");
 
-    ok($("#regular-template.editable-idle").length, "Template transitioned to idle state.");
+    ok($template.hasClass("editable-idle"), "Template transitioned to idle state.");
     deepEqual($("form[data-editable-template].editable-idle").length, 1, "No other template has been canceled.");
-    deepEqual($("#regular-template [data-editable-content]").val(), "", "Editable content has been cleared out.");
-    deepEqual($("#regular-template .original-content").text(), "", "Read-only content has been cleared out.");
+    deepEqual($template.find("[data-editable-content]").val(), "", "Editable content has been cleared out.");
+    deepEqual($template.find(".original-content").text(), "", "Read-only content has been cleared out.");
     notDeepEqual($editableContent.text(), "Brand New Title", "Original title has not changed.");
   }
 
@@ -88,7 +91,7 @@
   test("Manual transformed as editable (custom template)", function(){
     regularTests( $(".non-editable:first").editable({
       identifier: "longtext"
-    }) );
+    }), "longtext");
   });
 
   /*

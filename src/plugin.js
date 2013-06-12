@@ -54,7 +54,8 @@ function ContentEditPlugin(element, options) {
  */
 ContentEditPlugin.prototype.init = function init (sourceElement) {
   if (!sourceElement.hasAttribute("data-editable")){
-    sourceElement.setAttribute("data-editable", this.options.identifier);
+    sourceElement.setAttribute("data-editable", "");
+    this.options.identifier && sourceElement.setAttribute("data-editable-template", this.options.identifier);
   }
 
   this.sourceElement = sourceElement;
