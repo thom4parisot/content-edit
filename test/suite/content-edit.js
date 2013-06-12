@@ -94,6 +94,31 @@
     }), "longtext");
   });
 
+  test("Prevent Default And Custom Save", function(){
+    var $editableElement = $(".non-editable:first");
+    var newValue = "Jolly Jumper";
+
+    expect(2);
+
+    $editableElement.editable({
+      identifier: "longtext",
+      //opposite values of the default ones
+      preventDefault: {
+        "form": true
+      }
+    });
+
+    $editableElement.trigger("click");
+    $("#longtext-template [data-editable-content]").val(newValue);
+
+    $editableElement.on("editable.saving", function(event, editable){
+      strictEqual(editable.oldValue, "Edit me if you can.");
+      strictEqual(editable.value, newValue);
+    });
+
+    $("#longtext-template [type='submit']").trigger("click");
+  });
+
   /*
    Previously, the second opening would not work due to an editable.sourceElement mismatch.
    Especially because the check on the `editable.state` was misleading (perceived as editing though it was idle).
