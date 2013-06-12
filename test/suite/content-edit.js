@@ -4,6 +4,7 @@
   var ContentEditPlugin = $.fn.editable.Constructor;
 
   function regularTests($editableContent){
+    var $cancelButton = $("#regular-template [data-toggle='cancel']");
     $editableContent.trigger("click");
 
     ok($("#regular-template.editable-editing").length, "Template transitioned to editing state.");
@@ -15,7 +16,7 @@
     deepEqual($("#regular-template [data-editable-content]").val(), "Brand New Title", "Editable content field has changed.");
     deepEqual($("#regular-template .original-content").text(), $editableContent.text(), "Read-only content remained untouched.");
 
-    $editableContent.data("plugin_editable").setState("idle");
+    $cancelButton.trigger("click");
 
     ok($("#regular-template.editable-idle").length, "Template transitioned to idle state.");
     deepEqual($("form[data-editable-template].editable-idle").length, 1, "No other template has been canceled.");
@@ -90,9 +91,28 @@
     }) );
   });
 
+  /*
+   Previously, the second opening would not work due to an editable.sourceElement mismatch.
+   Especially because the check on the `editable.state` was misleading (perceived as editing though it was idle).
+   */
   test("Tricky workflow", function(){
     var $regularTemplateContent = $("#editable-title");
     var $regularProxyTemplateContent = $("a[data-editable]");
-    var $customTemplateContent = $("#qunit-fixture div[data-editable-template]");
+    var $cancelButton = $("#regular-template [data-toggle='cancel']");
+
+    $regularTemplateContent.trigger("click");
+    ok($("#regular-template.editable-editing").length, "Template transitioned to editing state.");
+
+    $cancelButton.trigger("click");
+    ok($("#regular-template.editable-idle").length, "Template transitioned to idle state.");
+
+    $regularProxyTemplateContent.trigger("click");
+    ok($("#regular-template.editable-editing").length, "Template transitioned to editing state.");
+
+    $cancelButton.trigger("click");
+    ok($("#regular-template.editable-idle").length, "Template transitioned to idle state.");
+
+    $regularTemplateContent.trigger("click");
+    ok($("#regular-template.editable-editing").length, "Template transitioned to editing state.");
   });
 })(jQuery);
