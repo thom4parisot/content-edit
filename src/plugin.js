@@ -73,6 +73,8 @@ ContentEditPlugin.prototype.init = function init (sourceElement) {
 
   this.sourceElement = sourceElement;
   this.templateElementLookup(this.sourceElement);
+
+  $(this.sourceElement).trigger("editable.construct", [this]);
 };
 
 /**
@@ -108,15 +110,18 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
  * @api
  */
 ContentEditPlugin.prototype.startEdit = function startEdit () {
-  $(this.templateElement).data("editable-source", this);
-
+  var $templateElement = $(this.templateElement);
   var sourceContent = $(this.sourceElement).html();
+  var override = this.options.overwriteDefaultContent;
 
-  this.setContent(sourceContent);
+  $templateElement.data("editable-source", this);
 
-  $(this.templateElement)
-    .find(".original-content").text(sourceContent).end()
-    .removeClass(this.options.visibilityTogglingClass);
+  if (override || (!override && this.getContent() === "")){
+    this.setContent(sourceContent);
+    $templateElement.find(".original-content").text(sourceContent);
+  }
+
+  $templateElement.removeClass(this.options.visibilityTogglingClass);
 };
 
 /**
@@ -142,12 +147,22 @@ ContentEditPlugin.prototype.endEdit = function endEdit () {
  * @api
  */
 ContentEditPlugin.prototype.onSave = function onSave () {
-  var userValue = $(this.templateElement).find("[data-editable-content]").val();
+  var userValue = this.getContent();
 
   if (userValue !== this.value){
     this.oldValue = this.value;
     this.value = userValue;
   }
+};
+
+/**
+ * Retrieves the actual editable content value.
+ *
+ * @api
+ * @returns {String}
+ */
+ContentEditPlugin.prototype.getContent = function getContent(){
+  return $(this.templateElement).find("[data-editable-content]").val();
 };
 
 /**
@@ -162,6 +177,7 @@ ContentEditPlugin.prototype.setContent = function setContent(value){
 
   $(this.templateElement).find("[data-editable-content]").val(value);
 
+  //@todo find a better way to manage the old/value (redundancy)
   this.oldValue = this.value;
   this.value = value;
 };
@@ -233,14 +249,16 @@ ContentEditPlugin.prototype.applyFilters = function applyFilters(content, filter
  */
 ContentEditPlugin.defaults = {
   identifier: "",
-  visibilityTogglingClass: "hidden",
+  inputFilters: [
+    "trim" in String.prototype && function(text){ return text.trim(); },
+    function(text){ return text.replace("&gt;", ">").replace("&lt;", "<"); }
+  ],
+  overwriteDefaultContent: false,
   preventDefault: {
     "a": true,
     "form": false
   },
-  inputFilters: [
-    "trim" in String.prototype && function(text){ return text.trim(); }
-  ]
+  visibilityTogglingClass: "hidden"
 };
 
 /**

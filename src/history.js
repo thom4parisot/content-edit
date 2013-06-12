@@ -37,6 +37,8 @@ ContentEditHistoryPlugin.namespace = "history";
  */
 ContentEditHistoryPlugin.prototype.init = function init(editable){
   this.historyElement = this.resolveHistoryElement(editable);
+
+  $(this.historyElement).data("editable-source", editable);
 };
 
 /**
@@ -72,7 +74,7 @@ ContentEditHistoryPlugin.prototype.idle = function idle(){
   $(this.historyElement).addClass("hidden");
 
   //this helps to retrieve what is the source we are working on without knowing it directly
-  $(this.historyElement).data("content-edit-source", null);
+  $(this.historyElement).data("editable-source", null);
 };
 
 /**
@@ -82,7 +84,7 @@ ContentEditHistoryPlugin.prototype.idle = function idle(){
  */
 ContentEditHistoryPlugin.prototype.editing = function editing(){
   //this helps to retrieve what is the source we are working on without knowing it directly
-  $(this.historyElement).data("content-edit-source", this.editable);
+  $(this.historyElement).data("editable-source", this.editable);
 
   $(this.historyElement).removeClass("hidden");
 };
@@ -106,7 +108,9 @@ ContentEditHistoryPlugin.prototype.revertRevision = function revertRevision(revi
  * @param {HTMLElement} revisionElement
  */
 ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisionElement){
-  this.editable.setContent( $(revisionElement).find("[data-editable-history-revision]").html().trim() );
+  this.editable.setContent( $(revisionElement).find("[data-editable-history-revision]").html() );
+
+  this.editable.setState("editing");
 };
 
 /**
@@ -124,7 +128,9 @@ ContentEditHistoryPlugin.UIStateHandler = function UIStateHandler(event, editabl
   }
 
   // where all the magic happens!
-  history.historyElement && history[editable.state] && history[editable.state](event);
+  if (event.namespace === editable.state){
+    history.historyElement && history[editable.state] && history[editable.state](event);
+  }
 };
 
 /**
@@ -135,7 +141,7 @@ ContentEditHistoryPlugin.UIStateHandler = function UIStateHandler(event, editabl
 ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(){
   var ns = ContentEditHistoryPlugin.namespace;
 
-  var editable = $(this).parents("[data-editable-"+ns+"]").data("content-edit-source");
+  var editable = $(this).parents("[data-editable-"+ns+"]").data("editable-source");
   var revisionAction = this.getAttribute("data-editable-"+ns+"-action") + "Revision";
 
   var history = editable.plugins[ns];
@@ -150,7 +156,7 @@ ContentEditHistoryPlugin.processRevisionAction = function processRevisionAction(
  * @param {jQuery} $context
  */
 ContentEditHistoryPlugin.dispatch = function dispatch($context){
-  $context.on("editable.any", "[data-editable]", ContentEditHistoryPlugin.UIStateHandler);
+  $context.on("editable.construct editable.any", "[data-editable]", ContentEditHistoryPlugin.UIStateHandler);
   $context.on("click", "a[data-editable-history-action]", ContentEditHistoryPlugin.processRevisionAction);
 };
 
