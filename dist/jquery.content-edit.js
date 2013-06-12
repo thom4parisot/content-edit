@@ -110,12 +110,12 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
 ContentEditPlugin.prototype.startEdit = function startEdit () {
   $(this.templateElement).data("editable-source", this);
 
-  this.setContent(this.sourceElement.innerHTML);
+  var sourceContent = $(this.sourceElement).html();
+
+  this.setContent(sourceContent);
 
   $(this.templateElement)
-    .find(".original-content")
-      .text(this.sourceElement.innerHTML)
-      .end()
+    .find(".original-content").text(sourceContent).end()
     .removeClass(this.options.visibilityTogglingClass);
 };
 
@@ -130,8 +130,7 @@ ContentEditPlugin.prototype.endEdit = function endEdit () {
 
   $(this.templateElement)
     .addClass(this.options.visibilityTogglingClass)
-    .find(".original-content")
-    .text("");
+    .find(".original-content").text("").end();
 
   this.setContent("");
 };
