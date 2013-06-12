@@ -13,6 +13,7 @@ Because in the real life, you may have several other requirements than the edit 
 The idea is then too *almost look inline edit* but
 to **fully rely on HTML forms you totally own and control**.
 
+[!Animated Demo GIF Presents…](demo/demo.gif)
 
 ## Install
 
