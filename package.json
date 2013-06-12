@@ -4,7 +4,7 @@
   "description": "HTML Content Edit (jQuery) plugin. To edit content with a more complex workflow than just an inline editable.",
   "author": "Thomas Parisot",
   "homepage": "https://github.com/oncletom/content-edit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0",
