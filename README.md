@@ -143,7 +143,6 @@ $("[data-editable]").on("editable.idle", function(event, editable){
     alert("Thanks for your submission!"); //you may find a better way than `alert` to inform the user.
   }
 });
-
 ```
 
 ### `editing`
@@ -155,7 +154,6 @@ The editable content is asked to be edited by the user.
 $("[data-editable]").on("editable.editing", function(event, editable){
   //display some help, transition fullscreen or whatever is relevant to assist the user
 });
-
 ```
 
 ### `saving`
@@ -181,7 +179,6 @@ $("[data-editable]").on("editable.saving", function(event, editable){
     editable.setState("editing");
   });
 });
-
 ```
 
 ### `any`
