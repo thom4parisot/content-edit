@@ -42,6 +42,19 @@ function ContentEditPlugin(element, options) {
    */
   this.plugins = {};
 
+  /**
+   * Actual value of the editable content.
+   * @type {String}
+   */
+  this.value = "";
+
+  /**
+   * Previous value of the editable content.
+   * Normally filed when saving occurs.
+   * @type {String}
+   */
+  this.oldValue = "";
+
   //init process. It populates the previous attributes.
   this.init(element);
   this.initEvents();
@@ -85,6 +98,7 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
 
   $contentElement.on("editable.editing", $.proxy(this.startEdit, this));
   $contentElement.on("editable.idle", $.proxy(this.endEdit, this));
+  $contentElement.on("editable.saving", $.proxy(this.onSave, this));
 };
 
 /**
@@ -106,17 +120,6 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
 };
 
 /**
- * Set the new content value of the Content Edit form.
- * It is not saved yet so the user can still alter it before hitting the *save* button.
- *
- * @api
- * @param {String} value
- */
-ContentEditPlugin.prototype.setContent = function setContent(value){
-  $(this.templateElement).find("[data-editable-content]").val(value);
-};
-
-/**
  * Hides the form and resets everything back.
  * Usually used when transitioning back to 'idle' state.
  *
@@ -128,9 +131,38 @@ ContentEditPlugin.prototype.endEdit = function endEdit () {
   $(this.templateElement)
     .addClass(this.options.visibilityTogglingClass)
     .find(".original-content")
-      .text("");
+    .text("");
 
   this.setContent("");
+};
+
+/**
+ * Hides the form and resets everything back.
+ * Usually used when transitioning back to 'idle' state.
+ *
+ * @api
+ */
+ContentEditPlugin.prototype.onSave = function onSave () {
+  var userValue = $(this.templateElement).find("[data-editable-content]").val();
+
+  if (userValue !== this.value){
+    this.oldValue = this.value;
+    this.value = userValue;
+  }
+};
+
+/**
+ * Set the new content value of the Content Edit form.
+ * It is not saved yet so the user can still alter it before hitting the *save* button.
+ *
+ * @api
+ * @param {String} value
+ */
+ContentEditPlugin.prototype.setContent = function setContent(value){
+  $(this.templateElement).find("[data-editable-content]").val(value);
+
+  this.oldValue = this.value;
+  this.value = value;
 };
 
 /**
