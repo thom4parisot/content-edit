@@ -121,9 +121,30 @@
   </div>
 </div>
 
+<script>
+  (function(){
+    var jQueries = ["../src/vendor/jquery/jquery.min.js", "http://code.jquery.com/jquery-1.8.3.min.js"];
+    var scripts = ["../dist/jquery.content-edit.js", "../dist/jquery.content-edit-history.js"];
 
-<script src="../src/vendor/jquery/jquery.min.js"></script>
-<script src="../dist/jquery.content-edit.js"></script>
-<script src="../dist/jquery.content-edit-history.js"></script>
+    function success(){
+      scripts.forEach(function(src){
+        var script = document.createElement("script");
+        script.src = src;
+        document.body.appendChild(script);
+      });
+    }
+
+    (function poll(){
+      if (!jQueries.length) return;
+
+      var script = document.createElement("script");
+      script.src = jQueries.shift();
+      script.addEventListener("load", success);
+      script.addEventListener("error", poll);
+
+      document.body.appendChild(script);
+    })();
+  })()
+</script>
 </body>
 </html>
