@@ -128,7 +128,7 @@ ContentEditHistoryPlugin.UIStateHandler = function UIStateHandler(event, editabl
   }
 
   // where all the magic happens!
-  if (event.namespace === editable.state){
+  if (event.namespace === editable.state || event.namespace === "any"){
     history.historyElement && history[editable.state] && history[editable.state](event);
   }
 };
