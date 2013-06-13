@@ -10,8 +10,7 @@ Its goal is to process only the frontend part: pick a content, let the user edit
 An *edit in place* is nice but can rarely catch on your UI/UX needs or more complex workflows.
 Because in the real life, you may have several other requirements than the edit (your backoffice framework for example).
 
-The idea is then too *almost look inline edit* but
-to **fully rely on HTML forms you totally own and control**.
+The idea is then to *almost look inline edit* by **fully relying on HTML forms you totally own and control**.
 
 ![Animated Demo GIF Presents…](demo/demo.gif)
 
