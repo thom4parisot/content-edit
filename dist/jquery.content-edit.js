@@ -78,8 +78,8 @@ ContentEditPlugin.prototype.init = function init (sourceElement) {
   }
 
   this.sourceElement = sourceElement;
-  this.templateElement = ContentEditPlugin.templateElementLookup(this.sourceElement);
   this.contextElement = ContentEditPlugin.contextElementLookup(this.sourceElement);
+  this.templateElement = ContentEditPlugin.templateElementLookup(this.contextElement || this.sourceElement);
 
   $(this.sourceElement).trigger("editable.construct", [this]);
 };
@@ -121,7 +121,7 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
 
   $templateElement.data("editable-source", this);
 
-  var values = {"": $(this.sourceElement).html()};
+  var values = this.getSourceValues();
   ContentEditPlugin.setContents(values, $templateElement, this.options.override, this);
 
   $templateElement.find(".original-content").text(values[""]);
@@ -160,6 +160,17 @@ ContentEditPlugin.prototype.onSave = function onSave () {
     this.oldValue = this.value;
     this.value = userValue;
   }
+};
+
+ContentEditPlugin.prototype.getSourceValues = function getSourceValues(){
+  var $els = this.contextElement ? $(this.contextElement).find("[data-editable]") : $(this.sourceElement);
+  var values = {};
+
+  $els.each(function(i, el){
+    values[el.getAttribute("data-editable")] = $(el).html();
+  });
+
+  return values;
 };
 
 /**
