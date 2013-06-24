@@ -16,8 +16,22 @@ The idea is then to *almost look inline edit* by **fully relying on HTML forms y
 
 ## Install
 
+### *via* bower
+
 ```bash
 bower install --save oncletom/content-edit
+```
+
+### *via* npm
+
+```bash
+npm install --save oncletom/content-edit
+```
+
+### *via* git
+
+```bash
+git clone https://github.com/oncletom/content-edit.git
 ```
 
 ## Usage
