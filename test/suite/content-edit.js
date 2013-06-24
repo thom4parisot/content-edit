@@ -70,6 +70,10 @@
     expect(0);
   });
 
+  test("applyFilters", function(){
+    expect(0);
+  });
+
   test("Uneditable elements", function(){
     var $nonEditableElement = $(".non-editable:first");
 

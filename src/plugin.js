@@ -118,16 +118,13 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
  */
 ContentEditPlugin.prototype.startEdit = function startEdit () {
   var $templateElement = $(this.templateElement);
-  var sourceContent = $(this.sourceElement).html();
-  var override = this.options.overwriteDefaultContent;
 
   $templateElement.data("editable-source", this);
 
-  if (override || (!override && this.getContent() === "")){
-    this.setContent(sourceContent);
-    $templateElement.find(".original-content").text(sourceContent);
-  }
+  var values = {"": $(this.sourceElement).html()};
+  ContentEditPlugin.setContents(values, $templateElement, this.options.override, this);
 
+  $templateElement.find(".original-content").text(values[""]);
   $templateElement.removeClass(this.options.visibilityTogglingClass);
 };
 
@@ -138,13 +135,16 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
  * @api
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
-  $(this.templateElement).data("editable-source", null);
+  var $templateElement = $(this.templateElement);
+  var override = true;
 
-  $(this.templateElement)
+  $templateElement.data("editable-source", null);
+
+  $templateElement
     .addClass(this.options.visibilityTogglingClass)
     .find(".original-content").text("").end();
 
-  this.setContent("");
+  ContentEditPlugin.setContents({"": ""}, $templateElement, override, this);
 };
 
 /**
@@ -168,8 +168,8 @@ ContentEditPlugin.prototype.onSave = function onSave () {
  * @api
  * @returns {String}
  */
-ContentEditPlugin.prototype.getContent = function getContent(){
-  return $(this.templateElement).find("[data-editable-content]").val();
+ContentEditPlugin.prototype.getContent = function getContent(key){
+  return $(this.templateElement).find("[data-editable-content='"+(key || "")+"']").val();
 };
 
 /**
@@ -180,13 +180,31 @@ ContentEditPlugin.prototype.getContent = function getContent(){
  * @param {String} value
  */
 ContentEditPlugin.prototype.setContent = function setContent(value){
-  value = this.applyFilters(value, this.options.inputFilters);
+  ContentEditPlugin.setContents({"": value}, $(this.templateElement), true, this);
+};
 
-  $(this.templateElement).find("[data-editable-content]").val(value);
+/**
+ * Set multiple contents at once
+ *
+ * @param {Array.<jQuery>} fieldMap
+ * @param {jQuery} $templateElement
+ */
+ContentEditPlugin.setContents = function setContents(fieldMap, $templateElement, override, instance){
 
-  //@todo find a better way to manage the old/value (redundancy)
-  this.oldValue = this.value;
-  this.value = value;
+  $.each(fieldMap, function(key, value){
+    var sourceContent = ContentEditPlugin.applyFilters(value, instance.options.inputFilters);
+    var $editField = $templateElement.find("[data-editable-content='"+key+"']");
+
+    if(override || (!override && $editField.val() === "")){
+      $editField.val(sourceContent);
+
+      if (key === ""){
+        //@todo find a better way to manage the old/value (redundancy)
+        instance.oldValue = instance.value;
+        instance.value = value;
+      }
+    }
+  });
 };
 
 /**
@@ -207,10 +225,10 @@ ContentEditPlugin.templateElementLookup = function templateElementLookup (conten
  * Resolve the `contextElement`.
  *
  * @param {HTMLElement} contentElement
- * @returns {HTMLElement}
+ * @returns {HTMLElement|null}
  */
 ContentEditPlugin.contextElementLookup = function contextElementLookup (contentElement) {
-  var element = $(contentElement).parents("[data-editable-context]").get(0) || contentElement.parentNode;
+  var element = $(contentElement).parents("[data-editable-context]").get(0) || null;
 
   return element;
 };
@@ -245,7 +263,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
  * @param {Array|Function} filters
  * @returns {String}
  */
-ContentEditPlugin.prototype.applyFilters = function applyFilters(content, filters){
+ContentEditPlugin.applyFilters = function applyFilters(content, filters){
   if (!$.isArray(filters)){
     filters = $.isFunction(filters) ? [filters] : [];
   }
