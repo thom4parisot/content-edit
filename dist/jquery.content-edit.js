@@ -136,7 +136,6 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
   var $templateElement = $(this.templateElement);
-  var override = true;
 
   $templateElement.data("editable-source", null);
 
@@ -144,7 +143,8 @@ ContentEditPlugin.prototype.endEdit = function endEdit () {
     .addClass(this.options.visibilityTogglingClass)
     .find(".original-content").text("").end();
 
-  ContentEditPlugin.setContents({"": ""}, $templateElement, override, this);
+  //will explode if the template is not a form
+  $templateElement.get(0).reset();
 };
 
 /**
