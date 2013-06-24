@@ -27,6 +27,18 @@
   You can also <a href="#editable-paragraph" data-editable>click to edit the first paragraph</a>.
 </small></p>
 
+<fieldset data-editable-context data-editable-template="multi">
+  <legend>Multiple Fields Edit</legend>
+
+  <h2 data-editable="title">Title</h2>
+
+  <p data-editable="content">One of the major perks to owning a cat over, say, a dog or a horse, is that
+    all cats instinctively drop their waste into neat little litter boxes, eliminating the
+    need for frequent "walkies" and the palpable awkwardness that comes with the public use
+    of pooper-scoopers and plastic baggies. Cats instinctively seek to bury their droppings, so it works out for everybody.
+  </p>
+</fieldset>
+
 <div class="container">
   <!-- Default Editable Template -->
   <form action="#" data-editable-template>
@@ -48,6 +60,24 @@
     <input type="text" name="content" data-editable-content required />
 
     <blockquote class="original-content"></blockquote>
+
+    <div class="form-actions">
+      <input class="btn btn-main" type="submit" value="Save" />
+      <input class="btn" type="button" value="Cancel" data-toggle="cancel" />
+    </div>
+  </form>
+
+  <!-- Multifields Template -->
+  <form action="#" data-editable-template="multi">
+    <h2>Multifields Edit</h2>
+
+    <div>
+      <input type="text" name="content[title]" data-editable-content="title" required />
+    </div>
+
+    <div>
+      <textarea name="content[content]" cols="30" rows="10" data-editable-content="content" required></textarea>
+    </div>
 
     <div class="form-actions">
       <input class="btn btn-main" type="submit" value="Save" />

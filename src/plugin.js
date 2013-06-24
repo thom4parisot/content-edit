@@ -37,6 +37,12 @@ function ContentEditPlugin(element, options) {
   this.templateElement = null;
 
   /**
+   * Context element where the lookup will occur.
+   * @type {null}
+   */
+  this.contextElement = null;
+
+  /**
    * Plugins instance holder.
    * @type {Object}
    */
@@ -72,7 +78,8 @@ ContentEditPlugin.prototype.init = function init (sourceElement) {
   }
 
   this.sourceElement = sourceElement;
-  this.templateElementLookup(this.sourceElement);
+  this.templateElement = ContentEditPlugin.templateElementLookup(this.sourceElement);
+  this.contextElement = ContentEditPlugin.contextElementLookup(this.sourceElement);
 
   $(this.sourceElement).trigger("editable.construct", [this]);
 };
@@ -184,17 +191,28 @@ ContentEditPlugin.prototype.setContent = function setContent(value){
 
 /**
  * Resolve the `templateElement`.
- * The edit process will happen in the
  *
  * @param {HTMLElement} contentElement
  * @returns {HTMLElement}
  */
-ContentEditPlugin.prototype.templateElementLookup = function templateElementLookup (contentElement) {
+ContentEditPlugin.templateElementLookup = function templateElementLookup (contentElement) {
   var templateSelector = contentElement.getAttribute("data-editable-template") || "";
 
-  this.templateElement = $("form[data-editable-template='"+templateSelector+"']").get(0);
+  var element = $("form[data-editable-template='"+templateSelector+"']").get(0);
 
-  return this.templateElement;
+  return element;
+};
+
+/**
+ * Resolve the `contextElement`.
+ *
+ * @param {HTMLElement} contentElement
+ * @returns {HTMLElement}
+ */
+ContentEditPlugin.contextElementLookup = function contextElementLookup (contentElement) {
+  var element = $(contentElement).parents("[data-editable-context]").get(0) || contentElement.parentNode;
+
+  return element;
 };
 
 /**

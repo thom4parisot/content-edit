@@ -62,6 +62,14 @@
     equal(f( document.querySelector("textarea") ).get(0), document.querySelector("#longtext-template"));
   });
 
+  test("templateElementLookup", function(){
+    expect(0);
+  });
+
+  test("contextElementLookup", function(){
+    expect(0);
+  });
+
   test("Uneditable elements", function(){
     var $nonEditableElement = $(".non-editable:first");
 
