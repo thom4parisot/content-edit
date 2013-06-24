@@ -58,7 +58,7 @@ ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHisto
     function(s){ return $(s); }
   ];
 
-  while(!el && lookups){
+  while(!el && lookups.length){
     el = lookups.shift()(selector).get(0);
   }
 
