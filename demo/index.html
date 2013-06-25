@@ -57,7 +57,7 @@
   <!-- Hyperlink Editable Template -->
   <form action="#" data-editable-template="hyperlink">
     <h2>Edit this hyperlink</h2>
-    <input type="text" name="content" data-editable-content required />
+    <input type="text" name="content" data-editable-content="text" required />
 
     <blockquote class="original-content"></blockquote>
 
@@ -145,6 +145,33 @@
         <ul class="actions">
           <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
           <li><a href="#copy" data-editable-history-action="copy">Copy this version</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="fancy-location">
+  <div class="content-history hidden" data-editable-history="multi">
+    <h2>Multiple Fields History</h2>
+
+    <ul class="editable-history-list">
+      <li class="editable-history-item">
+        <h2 data-editable-history-revision="title">Old Title</h2>
+        <p data-editable-history-revision="content">Contrary to popular assumptions though, this behavior doesn't come from Snowball's obsessive compulsive cleanliness, but rather an evolutionary holdover from before felines were domesticated and had more dangerous predators than the vacuum cleaner to worry about.</p>
+
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
+        </ul>
+      </li>
+      <li class="editable-history-item">
+        <h2 data-editable-history-revision="title">Even Older Title</h2>
+        <p data-editable-history-revision="content">Burying the poop prevents detection by their enemies, but there's another layer to it, which is that they do it to avoid challenging the dominant cat of the group. It kind of makes sense, if burying the poop is a sign that they fear another, larger animal, then leaving it uncovered would be a pretty aggressive act. "No one here is bad enough to fuck with me. Enjoy my shit."</p>
+
+        <ul class="actions">
+          <li><a href="#revert" data-editable-history-action="revert">Revert to this version</a></li>
+          <li><a href="#edit" data-editable-history-action="copy">Edit this version</a></li>
         </ul>
       </li>
     </ul>

@@ -108,7 +108,13 @@ ContentEditHistoryPlugin.prototype.revertRevision = function revertRevision(revi
  * @param {HTMLElement} revisionElement
  */
 ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisionElement){
-  this.editable.setContent( $(revisionElement).find("[data-editable-history-revision]").html() );
+  var values = {};
+
+  $(revisionElement).find("[data-editable-history-revision]").each(function(i, el){
+    values[el.getAttribute("data-editable-history-revision")] = $(el).html();
+  });
+
+  this.editable.constructor.setContents(values, $(this.editable.templateElement), true, this.editable);
 
   this.editable.setState("editing");
 };
