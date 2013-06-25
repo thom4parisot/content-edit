@@ -3,6 +3,7 @@
   display: none;
 }
 
+[data-editable-template][data-editable-context],
 [data-editable-template]:not([data-editable]).editable-editing,
 [data-editable-template]:not([data-editable]).editable-saving{
   display: block;

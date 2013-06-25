@@ -58,7 +58,7 @@ ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHisto
     function(s){ return $(s); }
   ];
 
-  while(!el && lookups){
+  while(!el && lookups.length){
     el = lookups.shift()(selector).get(0);
   }
 
@@ -71,7 +71,7 @@ ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHisto
  * @api
  */
 ContentEditHistoryPlugin.prototype.idle = function idle(){
-  $(this.historyElement).addClass("hidden");
+  $(this.historyElement).addClass(this.editable.options.visibilityTogglingClass);
 
   //this helps to retrieve what is the source we are working on without knowing it directly
   $(this.historyElement).data("editable-source", null);
@@ -86,7 +86,7 @@ ContentEditHistoryPlugin.prototype.editing = function editing(){
   //this helps to retrieve what is the source we are working on without knowing it directly
   $(this.historyElement).data("editable-source", this.editable);
 
-  $(this.historyElement).removeClass("hidden");
+  $(this.historyElement).removeClass(this.editable.options.visibilityTogglingClass);
 };
 
 /**
@@ -108,7 +108,13 @@ ContentEditHistoryPlugin.prototype.revertRevision = function revertRevision(revi
  * @param {HTMLElement} revisionElement
  */
 ContentEditHistoryPlugin.prototype.copyRevision = function revertRevision(revisionElement){
-  this.editable.setContent( $(revisionElement).find("[data-editable-history-revision]").html() );
+  var values = {};
+
+  $(revisionElement).find("[data-editable-history-revision]").each(function(i, el){
+    values[el.getAttribute("data-editable-history-revision")] = $(el).html();
+  });
+
+  this.editable.constructor.setContents(values, $(this.editable.templateElement), true, this.editable);
 
   this.editable.setState("editing");
 };

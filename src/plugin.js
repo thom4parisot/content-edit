@@ -37,6 +37,12 @@ function ContentEditPlugin(element, options) {
   this.templateElement = null;
 
   /**
+   * Context element where the lookup will occur.
+   * @type {null}
+   */
+  this.contextElement = null;
+
+  /**
    * Plugins instance holder.
    * @type {Object}
    */
@@ -72,7 +78,8 @@ ContentEditPlugin.prototype.init = function init (sourceElement) {
   }
 
   this.sourceElement = sourceElement;
-  this.templateElementLookup(this.sourceElement);
+  this.contextElement = ContentEditPlugin.contextElementLookup(this.sourceElement);
+  this.templateElement = ContentEditPlugin.templateElementLookup(this.contextElement || this.sourceElement);
 
   $(this.sourceElement).trigger("editable.construct", [this]);
 };
@@ -111,16 +118,13 @@ ContentEditPlugin.prototype.initEvents = function initEvents () {
  */
 ContentEditPlugin.prototype.startEdit = function startEdit () {
   var $templateElement = $(this.templateElement);
-  var sourceContent = $(this.sourceElement).html();
-  var override = this.options.overwriteDefaultContent;
 
   $templateElement.data("editable-source", this);
 
-  if (override || (!override && this.getContent() === "")){
-    this.setContent(sourceContent);
-    $templateElement.find(".original-content").text(sourceContent);
-  }
+  var values = this.getSourceValues();
+  ContentEditPlugin.setContents(values, $templateElement, this.options.override, this);
 
+  $templateElement.find(".original-content").text(values[""]);
   $templateElement.removeClass(this.options.visibilityTogglingClass);
 };
 
@@ -131,13 +135,16 @@ ContentEditPlugin.prototype.startEdit = function startEdit () {
  * @api
  */
 ContentEditPlugin.prototype.endEdit = function endEdit () {
-  $(this.templateElement).data("editable-source", null);
+  var $templateElement = $(this.templateElement);
 
-  $(this.templateElement)
+  $templateElement.data("editable-source", null);
+
+  $templateElement
     .addClass(this.options.visibilityTogglingClass)
     .find(".original-content").text("").end();
 
-  this.setContent("");
+  //will explode if the template is not a form
+  $templateElement.get(0).reset();
 };
 
 /**
@@ -155,14 +162,25 @@ ContentEditPlugin.prototype.onSave = function onSave () {
   }
 };
 
+ContentEditPlugin.prototype.getSourceValues = function getSourceValues(){
+  var $els = this.contextElement ? $(this.contextElement).find("[data-editable]") : $(this.sourceElement);
+  var values = {};
+
+  $els.each(function(i, el){
+    values[el.getAttribute("data-editable")] = $(el).html();
+  });
+
+  return values;
+};
+
 /**
  * Retrieves the actual editable content value.
  *
  * @api
  * @returns {String}
  */
-ContentEditPlugin.prototype.getContent = function getContent(){
-  return $(this.templateElement).find("[data-editable-content]").val();
+ContentEditPlugin.prototype.getContent = function getContent(key){
+  return $(this.templateElement).find("[data-editable-content='"+(key || "")+"']").val();
 };
 
 /**
@@ -173,28 +191,57 @@ ContentEditPlugin.prototype.getContent = function getContent(){
  * @param {String} value
  */
 ContentEditPlugin.prototype.setContent = function setContent(value){
-  value = this.applyFilters(value, this.options.inputFilters);
+  ContentEditPlugin.setContents({"": value}, $(this.templateElement), true, this);
+};
 
-  $(this.templateElement).find("[data-editable-content]").val(value);
+/**
+ * Set multiple contents at once
+ *
+ * @param {Array.<jQuery>} fieldMap
+ * @param {jQuery} $templateElement
+ */
+ContentEditPlugin.setContents = function setContents(fieldMap, $templateElement, override, instance){
 
-  //@todo find a better way to manage the old/value (redundancy)
-  this.oldValue = this.value;
-  this.value = value;
+  $.each(fieldMap, function(key, value){
+    var sourceContent = ContentEditPlugin.applyFilters(value, instance.options.inputFilters);
+    var $editField = $templateElement.find("[data-editable-content='"+key+"']");
+
+    if(override || (!override && $editField.val() === "")){
+      $editField.val(sourceContent);
+
+      if (key === ""){
+        //@todo find a better way to manage the old/value (redundancy)
+        instance.oldValue = instance.value;
+        instance.value = value;
+      }
+    }
+  });
 };
 
 /**
  * Resolve the `templateElement`.
- * The edit process will happen in the
  *
  * @param {HTMLElement} contentElement
  * @returns {HTMLElement}
  */
-ContentEditPlugin.prototype.templateElementLookup = function templateElementLookup (contentElement) {
+ContentEditPlugin.templateElementLookup = function templateElementLookup (contentElement) {
   var templateSelector = contentElement.getAttribute("data-editable-template") || "";
 
-  this.templateElement = $("form[data-editable-template='"+templateSelector+"']").get(0);
+  var element = $("form[data-editable-template='"+templateSelector+"']").get(0);
 
-  return this.templateElement;
+  return element;
+};
+
+/**
+ * Resolve the `contextElement`.
+ *
+ * @param {HTMLElement} contentElement
+ * @returns {HTMLElement|null}
+ */
+ContentEditPlugin.contextElementLookup = function contextElementLookup (contentElement) {
+  var element = $(contentElement).parents("[data-editable-context]").get(0) || null;
+
+  return element;
 };
 
 /**
@@ -227,7 +274,7 @@ ContentEditPlugin.prototype.setState = function setState (newState) {
  * @param {Array|Function} filters
  * @returns {String}
  */
-ContentEditPlugin.prototype.applyFilters = function applyFilters(content, filters){
+ContentEditPlugin.applyFilters = function applyFilters(content, filters){
   if (!$.isArray(filters)){
     filters = $.isFunction(filters) ? [filters] : [];
   }
