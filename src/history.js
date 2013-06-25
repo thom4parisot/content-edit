@@ -71,7 +71,7 @@ ContentEditHistoryPlugin.prototype.resolveHistoryElement = function resolveHisto
  * @api
  */
 ContentEditHistoryPlugin.prototype.idle = function idle(){
-  $(this.historyElement).addClass("hidden");
+  $(this.historyElement).addClass(this.editable.options.visibilityTogglingClass);
 
   //this helps to retrieve what is the source we are working on without knowing it directly
   $(this.historyElement).data("editable-source", null);
@@ -86,7 +86,7 @@ ContentEditHistoryPlugin.prototype.editing = function editing(){
   //this helps to retrieve what is the source we are working on without knowing it directly
   $(this.historyElement).data("editable-source", this.editable);
 
-  $(this.historyElement).removeClass("hidden");
+  $(this.historyElement).removeClass(this.editable.options.visibilityTogglingClass);
 };
 
 /**
